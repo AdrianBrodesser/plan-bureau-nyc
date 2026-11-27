@@ -1998,6 +1998,17 @@ function fullSnapshot(f) {
   const last = S.hist[S.hist.length - 1], end = proj()[proj().length - 1], pick = h => Object.fromEntries(Object.keys(KP).map(k => [k, h[k]]));
   return { app: 'Plan Bureau NYC', version: 3, created: new Date().toISOString(), proposal: f, quarter: qLabel(S), mode: S.mode, dataDate: LIVE.generated, link: planLink(f.name), decisions: { laws: S.pol, pending: S.pending, taxes: S.tax, taxPending: S.taxPending ? S.taxPending.tx : null, plan: S.plan, boroughPriority: S.bor.map(b => ({ id: b.id, w: b.w })) }, results: { start: pick(S.hist[0]), now: pick(last), projectedEnd2031: pick(end) }, history: S.hist };
 }
+// ---------- direct sending through Web3Forms ----------
+async function sendForm(fields) {
+  const key = ((SITE && SITE.formKey) || '').trim();
+  if (!key) return false;
+  try {
+    const r = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(Object.assign({ access_key: key, from_name: 'Plan Bureau' }, fields)) });
+    const j = await r.json().catch(() => ({}));
+    return r.ok && j.success !== false;
+  } catch (e) { return false; }
+}
+const trap = id => `<input type="checkbox" name="botcheck" id="${id}" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">`;
 function submitForm() { if (!S) return; tab = 'submit'; render(); window.scrollTo({ top: 0 }); }
 function submitView() {
   const em = (SITE.submitEmail || '').trim(), gh = (SITE.githubRepo || '').trim();
@@ -2025,17 +2036,24 @@ function submitView() {
           <label class="row" style="gap:8px;font-size:14px"><input type="checkbox" id="sbPub" checked style="width:18px;height:18px">You may publish this proposal (without my email address)</label>
         </div>
         <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
-          <button class="btn go" id="sbMail" ${em ? '' : 'disabled'}>Send by email</button>
+          ${trap('sbBot')}<button class="btn go" id="sbMail" ${em || SITE.formKey ? '' : 'disabled'}>Send to Plan Bureau</button>
           ${gh ? '<button class="btn" id="sbGh">Post publicly on GitHub</button>' : ''}
           <button class="btn" id="sbCopy">Copy link to this plan</button>
           <button class="btn" id="sbDl">Download full snapshot</button>
         </div>
-        <p class="note" id="sbMsg" style="margin-top:8px">${em ? 'Email opens your own mail program with everything filled in.' : 'The team address is not set up yet; you can still copy a link or download the file.'} The link reopens your laws, taxes and plan for anyone.</p></section>
+        <p class="note" id="sbMsg" style="margin-top:8px">${em || SITE.formKey ? 'Your proposal goes straight to the Plan Bureau team.' : 'The team address is not set up yet; you can still copy a link or download the file.'} The link reopens your laws, taxes and plan for anyone.</p></section>
     </div>`;
   const form = () => ({ name: $('#sbName').value.trim(), note: $('#sbNote').value.trim(), author: $('#sbAuthor').value.trim(), contact: $('#sbContact').value.trim(), publish: $('#sbPub').checked });
   const msg = t => { $('#sbMsg').textContent = t; };
   const need = f => { if (!f.name) { msg('Please give your plan a name first.'); $('#sbName').focus(); return false; } return true; };
-  if (em) $('#sbMail').onclick = () => { const f = form(); if (!need(f)) return; let body = planSummary(f); if (body.length > 1900) body = shortSummary(f); location.href = `mailto:${encodeURIComponent(em)}?subject=${encodeURIComponent('Plan proposal: ' + f.name)}&body=${encodeURIComponent(body)}`; msg('Your mail program should open with the proposal. Press send there.'); };
+  const mailIt = f => { let body = planSummary(f); if (body.length > 1900) body = shortSummary(f); location.href = `mailto:${encodeURIComponent(em)}?subject=${encodeURIComponent('Plan proposal: ' + f.name)}&body=${encodeURIComponent(body)}`; };
+  if (em || SITE.formKey) $('#sbMail').onclick = async () => { const f = form(); if (!need(f)) return; if ($('#sbBot').checked) { msg('Thank you, your proposal was sent.'); return; }
+    const b = $('#sbMail'); b.disabled = true; b.textContent = 'Sending…';
+    const sent = await sendForm({ subject: 'Plan proposal: ' + f.name, form: 'Plan proposal', plan_name: f.name, author: f.author || 'anonymous', email: f.contact || undefined, replyto: f.contact || undefined, may_publish: f.publish ? 'yes' : 'no', message: planSummary(f) });
+    b.disabled = false; b.textContent = 'Send to Plan Bureau';
+    if (sent) msg('Thank you, your proposal was sent to the Plan Bureau team.' + (f.contact ? ' We will reply to ' + f.contact + '.' : ''));
+    else if (em) { msg('Sending did not work (are you offline?). Your mail program opens instead; press send there.'); mailIt(f); }
+    else msg('Sending did not work. Please try again in a moment, or copy the link instead.'); };
   if (gh) $('#sbGh').onclick = () => { const f = form(); if (!need(f)) return; const g = Object.assign({}, f, { contact: '' }); window.open(`https://github.com/${gh}/issues/new?labels=proposal&title=${encodeURIComponent('Plan proposal: ' + f.name)}&body=${encodeURIComponent(planSummary(g).slice(0, 6000))}`, '_blank', 'noopener'); msg('GitHub opens in a new tab; you need a free GitHub account to post.'); };
   $('#sbCopy').onclick = async () => { const f = form(); const link = planLink(f.name); try { await navigator.clipboard.writeText(link); msg('Link copied. Anyone who opens it starts with your laws, taxes and plan.'); } catch (e) { prompt('Copy this link:', link); } };
   $('#sbDl').onclick = () => { const f = form(); const blob = new Blob([JSON.stringify(fullSnapshot(f), null, 1)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'plan-bureau-' + (f.name || 'plan').toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40) + '.json'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); msg('Snapshot downloaded. You can attach it to an email.'); };
@@ -2144,13 +2162,19 @@ function openTeach() {
       <div class="g2"><label class="fl">You teach<select id="tcRole"><option>At a school</option><option>At a university or college</option><option>Adult education or workshops</option><option>Other</option></select></label><label class="fl">Subject and age group<input id="tcSub" type="text" maxlength="120" placeholder="e.g. economics, 17–18 year olds"></label></div>
       <label class="fl">How can we help?<textarea id="tcMsg" rows="4" maxlength="1500" placeholder="What you are planning, when, and what would be useful"></textarea></label>
     </div>
-    <p class="note" id="tcNote" style="margin:8px 0 0">${em ? 'Sending opens your own mail program with the message filled in.' : 'The contact address is not set up yet.'}</p>
-    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap"><button class="btn go" id="tcSend" ${em ? '' : 'disabled'}>Send message</button><button class="btn" id="mClose">Close</button></div>`);
+    <p class="note" id="tcNote" style="margin:8px 0 0">${em || SITE.formKey ? 'Your message goes straight to the Plan Bureau team.' : 'The contact address is not set up yet.'}</p>
+    <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">${trap('tcBot')}<button class="btn go" id="tcSend" ${em || SITE.formKey ? '' : 'disabled'}>Send message</button><button class="btn" id="mClose">Close</button></div>`);
   const f = () => ({ name: $('#tcName').value.trim(), mail: $('#tcMail').value.trim(), org: $('#tcOrg').value.trim(), role: $('#tcRole').value, sub: $('#tcSub').value.trim(), msg: $('#tcMsg').value.trim() });
   const note = t => { $('#tcNote').textContent = t; };
   const body = v => `Name: ${v.name || '–'}\nEmail: ${v.mail}\nOrganisation: ${v.org || '–'}\nTeaches: ${v.role}\nSubject and age group: ${v.sub || '–'}\n\n${v.msg}`;
   const ok = v => { if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v.mail)) { note('Please add an email address so we can reply.'); $('#tcMail').focus(); return false; } if (!v.msg) { note('Please write a few words about what you need.'); $('#tcMsg').focus(); return false; } return true; };
-  if (em) $('#tcSend').onclick = () => { const v = f(); if (!ok(v)) return; location.href = `mailto:${encodeURIComponent(em)}?subject=${encodeURIComponent('Teaching with Plan Bureau' + (v.org ? ': ' + v.org : ''))}&body=${encodeURIComponent(body(v))}`; note('Your mail program should open with the message. Press send there.'); };
+  if (em || SITE.formKey) $('#tcSend').onclick = async () => { const v = f(); if (!ok(v)) return; if ($('#tcBot').checked) { note('Thank you, your message was sent.'); return; }
+    const subj = 'Teaching with Plan Bureau' + (v.org ? ': ' + v.org : ''), b = $('#tcSend'); b.disabled = true; b.textContent = 'Sending…';
+    const sent = await sendForm({ subject: subj, form: 'Teacher contact', name: v.name || '–', email: v.mail, replyto: v.mail, organisation: v.org || '–', teaches: v.role, subject_and_age: v.sub || '–', message: v.msg });
+    b.disabled = false; b.textContent = 'Send message';
+    if (sent) { note('Thank you, your message was sent. We will reply to ' + v.mail + '.'); b.textContent = 'Sent'; b.disabled = true; }
+    else if (em) { note('Sending did not work (are you offline?). Your mail program opens instead; press send there.'); location.href = `mailto:${encodeURIComponent(em)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body(v))}`; }
+    else note('Sending did not work. Please try again in a moment.'); };
 }
 // ---------- tabs ----------
 const TABS = [['submit', 'Submit your plan'], ['decide', 'Decisions'], ['overview', 'Control figures'], ['laws', 'Laws'], ['taxes', 'Taxes'], ['plan', 'Plan & balances'], ['economy', 'Economy'], ['map', 'Map'], ['labor', 'People'], ['services', 'Services'], ['justice', 'Safety & justice'], ['climate', 'Climate'], ['politics', 'Politics'], ['budget', 'Budget'], ['scenarios', 'Scenarios'], ['viz', 'Visualize'], ['trends', 'Trends'], ['learn', 'Learn'], ['sources', 'Sources']];

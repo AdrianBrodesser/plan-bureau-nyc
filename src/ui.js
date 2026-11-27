@@ -891,6 +891,7 @@ function guideSteps() {
   ];
 }
 function guideView() {
+  try { localStorage.setItem('pb-guide', '1'); } catch (e) { }
   const st = guideSteps(), nDone = st.filter(x => x.done).length;
   const node = (go, t, d) => `<button class="gnode" data-go="${go}"><b>${esc(t)}</b><span>${esc(d)}</span></button>`;
   const col = (h, items, cls = '') => `<div class="gcol ${cls}"><h4>${esc(h)}</h4>${items.join('')}</div>`;
@@ -911,7 +912,7 @@ function guideView() {
   </section>
 
   <section class="gsec" id="g-pages"><h2>Every page in one sentence</h2>
-    <div class="gpages">${TAB_GROUPS.map(([g, ids]) => `<div><h4>${esc(g)}</h4>${ids.filter(id => GUIDE_PAGES[id]).map(id => `<button class="gpage" data-go="${id}"><b>${esc(TABS.find(x => x[0] === id)[1])}</b><span>${esc(GUIDE_PAGES[id])}</span></button>`).join('')}</div>`).join('')}</div>
+    <div class="gpages">${TAB_GROUPS.filter(([g, ids]) => ids.some(id => GUIDE_PAGES[id])).map(([g, ids]) => `<div><h4>${esc(g)}</h4>${ids.filter(id => GUIDE_PAGES[id]).map(id => `<button class="gpage" data-go="${id}"><b>${esc(TABS.find(x => x[0] === id)[1])}</b><span>${esc(GUIDE_PAGES[id])}</span></button>`).join('')}</div>`).join('')}</div>
   </section>
 
   <section class="gsec" id="g-model"><h2>How the model connects</h2>
@@ -2303,11 +2304,11 @@ function openTeach() {
 }
 // ---------- tabs ----------
 const TABS = [['submit', 'Submit your plan'], ['decide', 'Decisions'], ['overview', 'Control figures'], ['laws', 'Laws'], ['taxes', 'Taxes'], ['plan', 'Plan & balances'], ['economy', 'Economy'], ['map', 'Map'], ['labor', 'People'], ['services', 'Services'], ['justice', 'Safety & justice'], ['climate', 'Climate'], ['politics', 'Politics'], ['budget', 'Budget'], ['scenarios', 'Scenarios'], ['viz', 'Visualize'], ['trends', 'Trends'], ['guide', 'Guide'], ['learn', 'Learn'], ['sources', 'Sources']];
-const TAB_GROUPS = [['The plan', ['decide', 'overview', 'laws', 'taxes', 'plan', 'economy']], ['The city', ['map', 'labor', 'services', 'justice', 'climate']], ['Power and money', ['politics', 'budget']], ['Looking ahead', ['scenarios', 'viz', 'trends']], ['Reference', ['guide', 'learn', 'sources']]];
+const TAB_GROUPS = [['Start here', ['guide']], ['The plan', ['decide', 'overview', 'laws', 'taxes', 'plan', 'economy']], ['The city', ['map', 'labor', 'services', 'justice', 'climate']], ['Power and money', ['politics', 'budget']], ['Looking ahead', ['scenarios', 'viz', 'trends']], ['Reference', ['learn', 'sources']]];
 const VIEWS = { submit: submitView, decide: decideView, overview, map: mapView, laws: lawsView, taxes: taxesView, plan: planView, economy: economyView, politics: politicsView, scenarios: scenariosView, viz: vizView, labor: peopleView, services: servicesView, justice: justiceView, climate: climateView, budget: budgetView, trends: trendsView, learn: learnView, sources: sourcesView, guide: guideView };
 function tabs() {
   let n = 0;
-  $('#tabs .wrap').innerHTML = `<button class="railsub" role="tab" aria-selected="${tab === 'submit'}" data-t="submit" type="button">Submit your plan</button>` + TAB_GROUPS.map(([gname, ids]) => `<div class="tg"><span class="tgl">${esc(gname)}</span>${ids.map(id => { n++; return `<button role="tab" aria-selected="${id === tab}" data-t="${id}"><span class="no">§${n}</span><span>${esc(TABS.find(t => t[0] === id)[1])}</span></button>`; }).join('')}</div>`).join('');
+  $('#tabs .wrap').innerHTML = `<button class="railsub" role="tab" aria-selected="${tab === 'submit'}" data-t="submit" type="button">Submit your plan</button>` + TAB_GROUPS.map(([gname, ids]) => `<div class="tg"><span class="tgl">${esc(gname)}</span>${ids.map(id => { const no = id === 'guide' ? '★' : '§' + (++n); return `<button role="tab" aria-selected="${id === tab}" data-t="${id}"><span class="no">${no}</span><span>${esc(TABS.find(t => t[0] === id)[1])}</span></button>`; }).join('')}</div>`).join('');
   $('#tabs .wrap').insertAdjacentHTML('beforeend', `<div class="tg tgx"><span class="tgl">About</span><button type="button" id="railWhy">Why this exists</button><button type="button" id="railHow">How it works</button><button type="button" id="railTeach">For teachers</button><button type="button" id="railStart">Back to the start</button></div>`);
   $('#railTeach').onclick = openTeach; $('#railWhy').onclick = openPrologue; $('#railHow').onclick = () => openIntro(0);
   $('#railStart').onclick = () => { save(); $('#app').hidden = true; $('#start').hidden = false; startScreen(); window.scrollTo({ top: 0 }); };
@@ -2543,7 +2544,7 @@ function startScreen() {
     const n = $('#subNew'); if (n) n.onclick = () => { closeModal(); $('#begin').focus(); }; };
   if (!whySeen() && !shared) openPrologue();
   
-  $('#begin').onclick = () => { boot(newGame({ mode })); if (!introSeen()) openIntro(0); };
+  $('#begin').onclick = () => { let g = true; try { g = localStorage.getItem('pb-guide') === '1'; } catch (e) { } if (!g) { tab = 'guide'; try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { } } boot(newGame({ mode })); if (!introSeen()) openIntro(0); };
 }
 // bring saves from older versions up to date, so every page has the fields it needs
 function migrate(s) {

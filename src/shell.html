@@ -199,7 +199,8 @@ details summary{cursor:pointer;color:var(--s1);font-size:13px}
 @media(min-width:1700px){.start .wrap{max-width:none;margin:0;padding-left:clamp(48px,7vw,180px);padding-right:clamp(48px,4vw,96px)}.pgfx{left:calc(clamp(48px,7vw,180px) + 620px);right:auto;width:calc(100vw - clamp(48px,7vw,180px) - 620px)}}
 .pgfx .sky rect{fill:var(--ink)}
 .start .wrap{position:relative;padding-block:clamp(18px,3vw,34px) clamp(28px,5vw,60px);min-height:100vh;display:flex;flex-direction:column}
-.ptop{display:flex;align-items:center;gap:12px}
+.ptop{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.ptop::before{content:'';position:absolute;z-index:-1;left:-100vw;right:-100vw;top:calc(-1 * clamp(18px,3vw,34px));bottom:-14px;background:var(--paper) radial-gradient(color-mix(in srgb,var(--ink) 9%,transparent) 1px,transparent 1.4px) 0 0/7px 7px;border-bottom:3px solid var(--ink)}
 .ptop .btn{margin-left:auto}.ptop .row{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.ptop .row .btn{margin-left:0}
 .ph{font:900 clamp(72px,13.5vw,196px)/.82 var(--display);font-stretch:62%;text-transform:uppercase;letter-spacing:-.01em;margin:clamp(36px,7vw,90px) 0 18px;max-width:7ch}
 .plead{font-size:clamp(17px,1.7vw,21px);line-height:1.4;max-width:34ch;margin:0 0 28px;font-stretch:90%}

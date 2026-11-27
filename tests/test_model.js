@@ -15,6 +15,19 @@ function run(name, setup, events) {
 run('status quo', null, false);
 run('with events', null, true);
 run('ambitious', s => { Object.assign(s.pol, { housing: 'h3', energy: 'e1', care: 'c1', method: 'p3' }); Object.assign(s.plan.cap, { build: 4, storage: 0.6, eff: 0.6, coast: 1, cool: 0.3 }); }, true);
+// Council: deals, 2029 seats, charter commission
+{
+  const g = (prim, sup) => { const s = M.newGame({ seed: 3 }); M.cnOf(s).prim = prim; for (let i = 0; i < 13; i++) { s.support = sup; M.step(s, { events: false }); } return s; };
+  const lo = g('none', 35), hi = g('none', 62), hiP = g('broad', 62);
+  check('council: seats always sum to 51', [lo, hi, hiP].every(s => s.cn.seats.prog + s.cn.seats.main + s.cn.seats.cs === 51));
+  check('council: popular mayor gains Progressive seats in 2029', hi.cn.seats.prog > 24 && lo.cn.seats.prog < 24);
+  check('council: primary campaign adds seats', hiP.cn.seats.prog > hi.cn.seats.prog);
+  const s = M.newGame({ seed: 3 }); s.mode = 'real'; const e2 = M.LAWS.find(l => l.id === 'energy').opts.find(o => o.id === 'e2'), q = M.dealQuote(s, e2);
+  check('council: near-miss law can be bought', q && q.cost > 0 && q.votes <= M.DEAL_MAX);
+  const r0 = s.b.exp; M.makeDeal(s, 'energy', 'e2'); check('council: deal puts law in force and costs money', s.pol.energy === 'e2' && M.dealCost(s) > 0.2);
+  const c = M.newGame({ seed: 3 }); c.mode = 'real'; c.support = 60; M.startCRC(c, 'method', 'p3'); for (let i = 0; i < 4; i++) { c.support = 60; M.step(c, { events: false }); }
+  check('council: charter amendment passes with popular mayor', c.pol.method === 'p3' && c.cn.crcLog[0].res === 'passed');
+}
 const mc = M.monteCarlo(M.newGame(), 10);
 check('monte carlo', mc.ends.length === 10);
 console.log('live data generated', M.LIVE.generated, 'unemployment start', M.U0());

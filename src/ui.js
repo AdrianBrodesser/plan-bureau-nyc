@@ -471,7 +471,7 @@ function optCard(l, o) {
   if (e.legal) tags.push(`<span class="tag ${e.legal >= 3 ? 'red' : 'warn'}">Legal risk ${e.legal >= 3 ? 'high' : 'some'}</span>`);
   if (e.climate && e.climate <= -1) tags.push('<span class="tag red">Investors leave</span>');
   if (e.support > 0) tags.push(`<span class="tag good">Support +</span>`); else if (e.support < 0) tags.push('<span class="tag red">Support −</span>');
-  if (S.mode === 'real' && o.id !== l.opts[0].id && !e.albany && !on) { const v = councilVote(S, o); tags.push(`<span class="tag ${v.pass ? 'good' : 'red'}">Council ${v.yes}–${v.no}</span>`); }
+  if (S.mode === 'real' && o.id !== l.opts[0].id && !e.albany && !on) { const v = councilVote(S, o); tags.push(`<span class="tag ${v.pass ? 'good' : 'red'}">Council ${v.yes}–${v.no}</span>`); if (!v.pass && v.short <= DEAL_MAX) tags.push(`<span class="tag warn">Deal: ${v.short} vote${v.short > 1 ? 's' : ''}, $${Math.round(v.short * dealPer(o) * 1000)}M/yr</span>`); }
   return `<div class="opt ${on ? 'on' : ''} ${pend ? 'pend' : ''}" role="button" tabindex="0" data-l="${l.id}" data-o="${o.id}" aria-pressed="${on}"><span class="n">${esc(o.name)} ${qm('opt.' + l.id + '.' + o.id, o.name)}</span><span class="ds">${esc(o.desc)}</span>${o.prec ? `<span class="pr">${esc(o.prec)}</span>` : ''}<span>${tags.join('')}</span></div>`;
 }
 function lawRefresh() { if (tab === 'decide') { decideView(); addNum(); } else lawsView(); }
@@ -482,7 +482,11 @@ function chooseLaw(lid, oid) {
   const cur = optOf(S, lid);
   if (S.b.fcb && S.mode === 'real' && ((o.fx.op || 0) > (cur.fx.op || 0) || o.fx.capex)) { toast('The Financial Control Board blocks new spending until the budget balances.'); return; }
   if (o.fx.albany && S.mode === 'real') { S.pending[lid] = oid; changed(); lawRefresh(); toast(`Sent to Albany: "${o.name}". It takes effect if the Legislature passes it.`); return; }
-  if (S.mode === 'real' && oid !== l.opts[0].id) { const v = councilVote(S, o); if (!v.pass) { toast(`The Council votes it down, ${v.yes} to ${v.no} (26 needed). ${v.by.map(b => `${BLOCS.find(x => x.id === b.id).name}: ${b.yes} of ${BLOCS.find(x => x.id === b.id).seats}`).join('; ')}. A milder option, or more public support, could change the count.`); return; } delete S.pending[lid]; S.pol[lid] = oid; changed(); lawRefresh(); toast(`The Council passes "${o.name}", ${v.yes} to ${v.no}.`); return; }
+  if (S.mode === 'real' && oid !== l.opts[0].id) { const v = councilVote(S, o); if (!v.pass) { const whip = v.by.map(b => `${BLOCS.find(x => x.id === b.id).name}: ${b.yes} of ${b.seats}`).join('; ');
+      if (v.short <= DEAL_MAX && !S.lost) { const cost = v.short * dealPer(o); modal(`<h2 style="margin-top:0">${v.short} vote${v.short > 1 ? 's' : ''} short</h2><p>The whip count for "${esc(o.name)}" is ${v.yes} to ${v.no}; 26 are needed. ${esc(whip)}.</p><p>Undecided members would vote yes in return for projects in their districts: parks, school repairs, street safety. That costs about <b>$${Math.round(cost * 1000)}M a year</b> for as long as the law stands (model assumption: $${Math.round(dealPer(o) * 1000)}M per vote; bigger and more radical laws cost more).</p><p class="note">Every mayor makes deals like this. The alternative is a milder option, more public support, or a different Council after the 2029 election.</p><div class="row" style="gap:8px;justify-content:flex-end;flex-wrap:wrap"><button class="btn" id="mClose">No deal</button><button class="btn go" id="dealGo">Make the deal</button></div>`);
+        $('#dealGo').onclick = () => { undoStack.push(JSON.stringify(S)); const q = makeDeal(S, lid, oid); closeModal(); if (!q) { toast('The deal fell through.'); return; } changed(); lawRefresh(); toast(`Deal done. The Council passes "${o.name}" with 26 votes, and $${Math.round(q.cost * 1000)}M a year goes to swing districts.`); };
+        return; }
+      toast(`The Council votes it down, ${v.yes} to ${v.no} (26 needed). ${whip}. That is too far short for a deal. A milder option, more public support, or a different Council after 2029 could change the count.`); return; } delete S.pending[lid]; S.pol[lid] = oid; changed(); lawRefresh(); toast(`The Council passes "${o.name}", ${v.yes} to ${v.no}.`); return; }
   delete S.pending[lid]; S.pol[lid] = oid; changed(); lawRefresh();
 }
 
@@ -1160,7 +1164,7 @@ function decTaxSum() {
 function taxCouncilVote(D) {
   if (S.lost) return; const v = S.mode === 'sandbox' ? { pass: true, yes: 51, no: 0, by: [] } : propTaxVote(S, D);
   if (v.pass) { undoStack.push(JSON.stringify(S)); S.tax.prop = D.prop.slice(); changed(); render(); toast(`The Council adopts the new property tax rates, ${v.yes} to ${v.no}. They apply from this quarter.`); }
-  else toast(`The vote fails, ${v.yes} to ${v.no} (26 needed). ${v.by.map(b => `${BLOCS.find(x => x.id === b.id).name}: ${b.yes} of ${BLOCS.find(x => x.id === b.id).seats}`).join('; ')}. Smaller increases, or raising public support first, would change the count.`);
+  else toast(`The vote fails, ${v.yes} to ${v.no} (26 needed). ${v.by.map(b => `${BLOCS.find(x => x.id === b.id).name}: ${b.yes} of ${b.seats}`).join('; ')}. Smaller increases, or raising public support first, would change the count.`);
 }
 function taxSendAlbany(D) {
   if (S.lost) return; const tx = clone(D); tx.prop = S.tax.prop.slice();
@@ -1211,7 +1215,7 @@ function taxOut() {
   const propCh = D.prop.some((x, c) => Math.abs(x - S.tax.prop[c]) > 1e-9);
   const albCh = TAXDEF.some(d => d.who === 'albany' && Math.abs(tget(D, d) - tget(S.tax, d)) > 1e-9);
   $('#txVote').disabled = !propCh || S.lost; $('#txAlb').disabled = !albCh || S.lost;
-  $('#whip').innerHTML = propCh ? `<h3>Whip count for your property rates</h3>${v.by.map(b => { const B = BLOCS.find(x => x.id === b.id); return `<div class="hbar"><span>${esc(B.name)}</span><span class="tr"><i style="width:${b.yes / B.seats * 100}%;background:var(--ink)"></i></span><span class="val">${b.yes} of ${B.seats}</span></div>`; }).join('')}<p class="note" style="margin-top:4px"><b style="color:${v.pass ? 'var(--good)' : 'var(--red)'}">${v.yes} yes, ${v.no} no</b>: ${v.pass ? 'it would pass' : 'it would fail'} (26 of 51 needed).</p>` : '';
+  $('#whip').innerHTML = propCh ? `<h3>Whip count for your property rates</h3>${v.by.map(b => { const B = BLOCS.find(x => x.id === b.id); return `<div class="hbar"><span>${esc(B.name)}</span><span class="tr"><i style="width:${b.yes / b.seats * 100}%;background:var(--ink)"></i></span><span class="val">${b.yes} of ${b.seats}</span></div>`; }).join('')}<p class="note" style="margin-top:4px"><b style="color:${v.pass ? 'var(--good)' : 'var(--red)'}">${v.yes} yes, ${v.no} no</b>: ${v.pass ? 'it would pass' : 'it would fail'} (26 of 51 needed).</p>` : '';
   const keys = Object.keys(now.parts);
   const mx = Math.max(...dn.map(g => g.taxRate), ...dd.map(g => g.taxRate));
   const nets = dd.map(g => g.net); const nm = Math.max(1, ...nets.map(Math.abs));
@@ -1232,7 +1236,7 @@ function taxOut() {
 // ---------- politics, money, region ----------
 function politicsView() {
   const F = S.fin, B = S.b, rating = ratingName(F.notch).replace(' (S&P scale)', '');
-  const seats = BLOCS.flatMap(b => Array.from({ length: b.seats }, () => b.color));
+  const ST = seatsOf(S), seats = BLOCS.flatMap(b => Array.from({ length: ST[b.id] }, () => b.color));
   const due = c => c.at[0] * 4 + c.at[1] - 1, nowQ = S.year * 4 + S.q - 1;
   const pend = Object.keys(S.pending).map(l => `<li><span class="tag warn">Albany</span> ${esc(optName2(l, S.pending[l]))} <span class="note">(${esc(LAWS.find(x => x.id === l).name)})</span></li>`);
   if (S.taxPending) pend.push(`<li><span class="tag warn">Albany</span> Your tax package <span class="note">(sent ${S.taxPending.age || 0} quarters ago)</span></li>`);
@@ -1241,12 +1245,13 @@ function politicsView() {
     <div class="grid g2">
       <div class="card"><h2>City Council, 51 seats</h2>
         <div class="seats" aria-hidden="true">${seats.map(c => `<i style="background:${c}"></i>`).join('')}</div>
-        ${BLOCS.map(b => `<div class="row" style="gap:8px;margin-top:6px"><span style="color:${b.color}">■</span><span style="flex:1">${esc(b.name)}</span><b class="num">${b.seats}</b></div>`).join('')}
-        <p class="note" style="margin-top:8px">Democrats hold 46 seats and Republicans 5. The Progressive Caucus has 24 members, two short of a majority on its own; Speaker Julie Menin is a moderate. Bloc sizes for the moderate wing are a model simplification. Each law option shows its whip count on the Laws tab; votes shift with public support.</p></div>
+        ${BLOCS.map(b => `<div class="row" style="gap:8px;margin-top:6px"><span style="color:${b.color}">■</span><span style="flex:1">${esc(b.name)}</span><b class="num">${ST[b.id]}</b>${S.cn && S.cn.el && S.cn.el.before[b.id] !== ST[b.id] ? `<span class="note">(was ${S.cn.el.before[b.id]})</span>` : ''}</div>`).join('')}
+        <p class="note" style="margin-top:8px">Democrats hold 46 seats and Republicans 5. The Progressive Caucus has 24 members, two short of a majority on its own; Speaker Julie Menin is a moderate. Bloc sizes for the moderate wing are a model simplification. Each law option shows its whip count on the Laws tab; votes shift with public support. ${S.cn && S.cn.el ? 'Seats shown are the Council elected in November 2029.' : 'All 51 seats are up in November 2029.'}</p></div>
       <div class="card"><h2>Albany</h2><p>The Legislature is <b>${esc(albanyNow())}</b>.</p>
         <ul class="list">${pend.join('') || '<li class="note">Nothing pending.</li>'}</ul>
         <p class="note">Chance of passage each quarter: ${pct(Math.max(0, (S.q === 1 ? 0.6 : S.q === 2 ? 1.5 : 0) * (S.A.albany + (S.support - 50) / 200)) * 100, 0)} for laws (Q1 0.6×, Q2 1.5×, rest of year 0, scaled by support).</p></div>
     </div>
+${councilPowerHTML()}
     <div class="grid g2" style="margin-top:14px">
       <div class="card"><h2>Union contracts</h2><p class="note">Public-sector strikes are illegal under the Taylor Law, but unions can work to rule and take uniformed disputes to arbitration. Personal services cost the city about $60B a year.</p>
         <div class="scroll"><table><thead><tr><th>Union</th><th>Due</th><th>Status</th></tr></thead><tbody>${CONTRACTS.map(c => `<tr><td>${esc(c.name)}</td><td>Q${c.at[1]} ${c.at[0]}</td><td>${S.un.done[c.id] != null ? `Settled at ${S.un.done[c.id]}% a year` : due(c) <= nowQ ? '<span class="tag warn">Talks open</span>' : 'Not yet'}</td></tr>`).join('')}</tbody></table></div>
@@ -1270,6 +1275,36 @@ function politicsView() {
   lineChart($('#poC'), pair('capUse', 'var(--s2)'), { yf: v => pct(v, 0), goal: 100, goalLab: 'capacity' });
   lineChart($('#poM'), pair('commuters', 'var(--s3)'), { yf: v => k1(v) });
   const od = $('#openDec'); if (od) od.onclick = decisionModal;
+  councilPowerBind();
+}
+
+function councilPowerHTML() {
+  const c = S.cn || {}, deals = Object.entries(c.deals || {}).filter(([lid, d]) => S.pol[lid] === d.oid);
+  const real = S.mode === 'real', pOpen = primOpen(S), prim = c.prim || 'none';
+  const opts = charterOptions(S), by = crcBallotYear(S);
+  const dealList = deals.length ? `<ul class="list">${deals.map(([lid, d]) => `<li>${esc(optName2(lid, d.oid))}: ${d.votes} vote${d.votes > 1 ? 's' : ''}, <b>$${Math.round(d.votes * (d.per || DEAL_VOTE) * 1000)}M/yr</b></li>`).join('')}</ul><p class="note">Total ${bn(dealCost(S))}/yr, paid while each law stands.</p>` : '<p class="note">No deals yet. When a law is up to five votes short, the Laws tab offers one.</p>';
+  const primBox = c.primDone ? `<p>${c.primDone.prim === 'none' ? 'You stayed out of the June 2029 primaries.' : `Your candidates won <b>${c.primDone.gain}</b> primar${c.primDone.gain === 1 ? 'y' : 'ies'} in June 2029.`}</p>`
+    : `<div class="seg" id="primSeg" style="display:grid;grid-template-columns:minmax(0,1fr)">${Object.entries(PRIM).map(([k, P]) => `<button data-p="${k}" class="${prim === k ? 'on' : ''}" ${pOpen && !S.lost ? '' : 'disabled'}>${esc(P.label)}</button>`).join('')}</div>
+      <p class="note" style="margin-top:6px">${prim === 'none' ? 'No risk, no gain.' : prim === 'some' ? 'Recruit and endorse candidates for open seats. Expected gain: 1 to 4 seats, more if you are popular. Members notice, slightly.' : 'Also run challengers against sitting members who block you. Expected gain: 2 to 8 seats if you are popular, but the members you target vote against you until the primary, and those who survive hold a grudge.'} Decided in the June 2029 primaries.</p>`;
+  const crcBox = c.crc ? `<p>Your commission is preparing <b>"${esc(optName2(c.crc.lid, c.crc.oid))}"</b> for the November ${c.crc.year} ballot. Projected yes vote today: <b>${pct(crcYes(S, LAWS.find(l => l.id === c.crc.lid).opts.find(o => o.id === c.crc.oid)), 0)}</b>.</p>`
+    : S.lost ? '<p class="note">You are out of office.</p>' : by > 2031 ? '<p class="note">Too late: a commission appointed now could not reach the ballot before the plan ends.</p>'
+    : opts.length ? `<label class="fl">Proposal<select id="crcPick">${opts.map(x => `<option value="${x.lid}|${x.oid}">${esc(x.law)}: ${esc(x.name)}</option>`).join('')}</select></label>
+      <div class="row" style="gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap"><button class="btn" id="crcGo" ${real ? '' : 'disabled'}>Appoint a commission</button><span class="note" id="crcInfo"></span></div>` : '<p class="note">Everything a commission could propose is already in force.</p>';
+  const log = (c.crcLog || []).map(x => `<li>${x.year}: "${esc(optName2(x.lid, x.oid))}" ${x.res}${x.yes != null ? ` (${x.yes.toFixed(0)}% yes)` : ''}</li>`).join('');
+  return `<div class="card" style="margin-top:14px"><h2>Shaping the Council</h2>
+    <p class="note">The mayor cannot change the Council's powers. A mayor can change what members are offered, who sits in the Council after 2029, and which questions go straight to voters.${real ? '' : ' In Sandbox the Council does not vote, so these tools only matter under realistic rules.'}</p>
+    <div class="grid g3" style="margin-top:10px">
+      <div><h3>Deals with members</h3>${dealList}</div>
+      <div><h3>The 2029 primaries</h3>${primBox}<p class="note">In November 2029 all 51 seats are up, and about ${OPEN_2029} are open because more than two-thirds of members reach their term limit. Your own vote share moves those open seats.</p></div>
+      <div><h3>Charter Revision Commission</h3><p class="note">A commission you appoint puts Charter changes on the November ballot without a Council vote, as the 2025 commission did over Council objections. It can reorganise city government, not change state law or taxes. Appointed by June, it reaches that year's ballot.</p>${crcBox}${log ? `<ul class="list">${log}</ul>` : ''}</div>
+    </div></div>`;
+}
+function councilPowerBind() {
+  $$('#primSeg [data-p]').forEach(b => b.onclick = () => { if (!primOpen(S) || S.lost) return; cnOf(S).prim = b.dataset.p; changed(); politicsView(); });
+  const sel = $('#crcPick'), info = $('#crcInfo');
+  const upd = () => { if (!sel) return; const [lid, oid] = sel.value.split('|'), o = LAWS.find(l => l.id === lid).opts.find(x => x.id === oid); info.textContent = `Ballot: November ${crcBallotYear(S)}. Projected yes today: ${crcYes(S, o).toFixed(0)}%.`; };
+  if (sel) { sel.onchange = upd; upd(); }
+  const go = $('#crcGo'); if (go) go.onclick = () => { const [lid, oid] = sel.value.split('|'); undoStack.push(JSON.stringify(S)); const x = startCRC(S, lid, oid); if (!x) { toast('A commission cannot be appointed now.'); return; } changed(); politicsView(); toast(`Commission appointed. "${optName2(lid, oid)}" goes to voters in November ${x.year}.`); };
 }
 function decisionHTML() {
   const d = S.decision; if (!d) return '';

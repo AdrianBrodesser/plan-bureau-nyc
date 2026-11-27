@@ -797,5 +797,23 @@
   "url": "https://www.nyc.gov/assets/planning/download/pdf/planning-level/housing-economy/permitting-first-half-of-2022-info-brief.pdf",
   "verified": "2026-11-26",
   "reviewMonths": 12
+ },
+ "cnTerm": {
+  "label": "City & State (May 2026): more than two-thirds of Council members reach their term limit in 2029; only about 14–15 can run again",
+  "url": "https://www.cityandstateny.com/20th-anniversary/2026/05/whos-going-be-next-new-york-city-council-speaker/413438/",
+  "verified": "2026-11-27",
+  "reviewMonths": 12
+ },
+ "cnElect": {
+  "label": "NYC Charter §25 (via Help New York, 2026): Council members serve four-year terms; the next regular Council election is in November 2029",
+  "url": "https://helpnewyork.com/?p=7935",
+  "verified": "2026-11-27",
+  "reviewMonths": 24
+ },
+ "crc": {
+  "label": "NYC Charter Revision Commission: the 2025 commission, convened by the mayor in Dec 2024, put five proposals on the Nov 2025 ballot over Council objections",
+  "url": "https://www.nyc.gov/site/charter/news/2025-nyc-charter-revision-commission-adopts-five-ballot-proposals.page",
+  "verified": "2026-11-27",
+  "reviewMonths": 24
  }
 }

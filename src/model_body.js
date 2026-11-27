@@ -213,7 +213,7 @@ function newGame(opts = {}) {
     sf: { shoot: LV('city.shoot', 688), officers: 34700 },
     js: jsInit(),
     cx: null,
-    el2029: null, lost: false,
+    el2029: null, lost: false, cn: null,
     ec: { top: 100, climate: 100, gcp: 1400, exportsB: 0, importsB: 0 },
     b: { rev: 125.8, exp: 125.8, newDebt: 0, debtService: 0, deficit: 0, streak: 0, fcb: false, headroom: 40, payGo: 0, savings: 0, reserves: 7.2, draw: 0 },
     support: 50, legal: 0, info: 0.55, methodQ: 0,
@@ -415,18 +415,82 @@ function councilVote(s, o) {
   const r = lawRadical(o), sh = (s.support - 50) / 100;
   const tilt = o.council || {};
   const p = { prog: tilt.prog ?? (0.95 - Math.max(0, r - 6) * 0.15), main: tilt.main ?? (0.9 - r * 0.12), cs: tilt.cs ?? (0.7 - r * 0.25) };
-  const by = BLOCS.map(b => ({ id: b.id, yes: Math.round(b.seats * Math.max(0, Math.min(1, p[b.id] + sh))) }));
+  const g = grudgeOf(s); p.main -= g; p.cs -= g / 2;
+  const st = seatsOf(s);
+  const by = BLOCS.map(b => ({ id: b.id, seats: st[b.id], yes: Math.round(st[b.id] * Math.max(0, Math.min(1, p[b.id] + sh))) }));
   const yes = by.reduce((a, b) => a + b.yes, 0);
-  return { yes, no: 51 - yes, pass: yes >= 26, by };
+  return { yes, no: 51 - yes, pass: yes >= 26, by, short: Math.max(0, 26 - yes) };
 }
 function propTaxVote(s, tx) {
   // homeowners' class 1 and renters' class 2 hikes are toxic; commercial hikes are easier. Cuts pass easily.
   const d = tx.prop.map((v, c) => v / TAX0.prop[c] - 1); const sh = (s.support - 50) / 100;
   const hikeRes = Math.max(0, d[0]) * 6 + Math.max(0, d[1]) * 4 + Math.max(0, d[2]) * 1 + Math.max(0, d[3]) * 1.5;
   const p = { prog: 0.85 - Math.max(0, d[0]) * 4 - Math.max(0, d[1]) * 2 + sh, main: 0.8 - hikeRes * 1.4 + sh, cs: 0.6 - hikeRes * 3 + sh };
-  const by = BLOCS.map(b => ({ id: b.id, yes: Math.round(b.seats * Math.max(0, Math.min(1, p[b.id]))) }));
+  const g = grudgeOf(s); p.main -= g; p.cs -= g / 2; const st = seatsOf(s);
+  const by = BLOCS.map(b => ({ id: b.id, seats: st[b.id], yes: Math.round(st[b.id] * Math.max(0, Math.min(1, p[b.id]))) }));
   const yes = by.reduce((a, b) => a + b.yes, 0);
   return { yes, no: 51 - yes, pass: yes >= 26, by };
+}
+
+// ---- Shaping the Council: deals, the 2029 primaries and election, a Charter Revision Commission ----
+// The mayor cannot change the Council's powers, but can change who sits in it and what it is offered.
+const SEATS0 = { prog: 24, main: 14, cs: 13 };
+const DEAL_VOTE = 0.03;   // $B/yr of district projects per vote won for an ordinary law (model assumption); bigger, more radical laws cost more per vote
+const DEAL_MAX = 5;       // only near-misses can be bought; members cannot be paid to reverse a big no
+const OPEN_2029 = 36;     // seats without an incumbent in 2029 (source cnTerm: more than two-thirds term-limited)
+const PRIM = { none: { g: 0, base: 0, k: 0, label: 'Stay out of the primaries' }, some: { g: 0.04, base: 1, k: 3, label: 'Back candidates in open seats' }, broad: { g: 0.1, base: 2, k: 6, label: 'Challenge sitting members too' } };
+// Options a Charter Revision Commission can put to voters: how city government is organised, not state law or new taxes.
+const CHARTER_OK = ['p1', 'p2', 'p3', 'p4', 'k1', 'k2', 'k3', 'k4', 'z1', 'z3', 'l2'];
+function cnOf(s) { if (!s.cn) s.cn = { seats: { ...SEATS0 }, deals: {}, prim: 'none', primDone: null, grudge: 0, crc: null, crcLog: [], el: null }; return s.cn; }
+function seatsOf(s) { return s && s.cn ? s.cn.seats : SEATS0; }
+function grudgeOf(s) { if (!s || !s.cn) return 0; const c = s.cn; return c.grudge + (c.primDone ? 0 : PRIM[c.prim || 'none'].g); }
+function dealCost(s) { if (!s.cn) return 0; let t = 0; for (const lid in s.cn.deals) { const d = s.cn.deals[lid]; if (s.pol[lid] === d.oid) t += d.votes * (d.per || DEAL_VOTE); } return t; }
+function dealPer(o) { return DEAL_VOTE * (1 + Math.max(0, lawRadical(o))); }
+function dealQuote(s, o) { const v = councilVote(s, o), per = dealPer(o); return v.pass ? null : v.short <= DEAL_MAX ? { votes: v.short, per, cost: v.short * per, v } : { votes: v.short, per, cost: null, v }; }
+function makeDeal(s, lid, oid) { const o = LAWS.find(l => l.id === lid).opts.find(x => x.id === oid); const q = dealQuote(s, o); if (!q || q.cost == null) return false; cnOf(s).deals[lid] = { oid, votes: q.votes, per: q.per, t: s.t }; s.pol[lid] = oid; delete s.pending[lid]; return q; }
+function primOpen(s) { return !(s.cn && s.cn.primDone) && (s.year < 2029 || (s.year === 2029 && s.q <= 2)); }
+function charterOptions(s) { return LAWS.flatMap(l => l.opts.filter(o => CHARTER_OK.includes(o.id) && s.pol[l.id] !== o.id).map(o => ({ lid: l.id, oid: o.id, law: l.name, name: o.name }))); }
+function crcBallotYear(s) { return s.q <= 2 ? s.year : s.year + 1; }
+function crcYes(s, o) { return 53 + (s.support - 50) * 0.8 - lawRadical(o) * 1.5; }
+function startCRC(s, lid, oid) { const c = cnOf(s); if (c.crc || s.lost) return false; const y = crcBallotYear(s); if (y > 2031) return false; c.crc = { lid, oid, year: y, from: s.t }; return c.crc; }
+function cnStep(s, rep, R, ev, sandbox) {
+  const c = cnOf(s);
+  for (const lid in c.deals) if (s.pol[lid] !== c.deals[lid].oid) delete c.deals[lid];
+  c.grudge *= 0.97;
+  // June primaries: in a city this Democratic the primary usually decides the seat
+  if (s.year === 2029 && s.q === 2 && !c.primDone) {
+    const P = PRIM[c.prim || 'none'], str = Math.max(0, Math.min(1, (s.support - 38) / 30));
+    let gain = P.base + P.k * str + (ev && !sandbox && P.k ? (R() * 2 - 1) * 1.5 : 0); gain = Math.max(0, Math.round(gain));
+    c.primDone = { prim: c.prim || 'none', gain };
+    if (c.prim === 'broad') c.grudge += 0.1 * (1 - str * 0.6);
+    if (c.prim !== 'none') rep.events.push({ k: gain > 0 ? 'good' : 'warn', t: 'Council primaries', d: gain > 0 ? `Candidates you backed win ${gain} Democratic primar${gain === 1 ? 'y' : 'ies'}. In most districts the primary decides the seat; they take office in January 2030 if they win in November.` : 'Your candidates lose their primaries. Members you campaigned against remember it.' });
+  }
+  // November 2029: all 51 seats, about 36 of them open because of term limits
+  if (s.year === 2029 && s.q === 4 && !c.el) {
+    const share = s.el2029 ? s.el2029.share : voteShare(s);
+    const before = { ...c.seats }, open = OPEN_2029 / 51;
+    let d = Math.round((share - 50.4) * 0.45 * open * 2) + (c.primDone ? c.primDone.gain : 0);
+    d = Math.max(-10, Math.min(12, d));
+    const st = c.seats; let prog = Math.max(12, Math.min(38, st.prog + d)); const moved = prog - st.prog;
+    if (moved >= 0) { const fromMain = Math.min(st.main - 4, Math.ceil(moved * 0.65)); st.main -= fromMain; st.cs -= moved - fromMain; }
+    else { st.main += Math.ceil(-moved * 0.6); st.cs += -moved - Math.ceil(-moved * 0.6); }
+    st.prog = prog; if (st.cs < 6) { st.main -= 6 - st.cs; st.cs = 6; }
+    st.prog = 51 - st.main - st.cs;
+    c.el = { before, after: { ...st } };
+    c.grudge *= 0.5;
+    rep.events.push({ k: st.prog >= before.prog ? 'good' : 'bad', t: 'New City Council elected', d: `All 51 seats were on the ballot, about ${OPEN_2029} of them open because of term limits. From January 2030 the Progressive Caucus has ${st.prog} seats (was ${before.prog}), mainstream Democrats ${st.main} (was ${before.main}), the Common Sense Caucus ${st.cs} (was ${before.cs}).` });
+  }
+  // Charter Revision Commission: proposals go to voters in November and bypass the Council
+  if (c.crc && s.q === 4 && s.year === c.crc.year) {
+    const x = c.crc, l = LAWS.find(q => q.id === x.lid), o = l.opts.find(q => q.id === x.oid);
+    if (s.lost) { c.crcLog.push({ ...x, res: 'dropped' }); c.crc = null; }
+    else {
+      const yes = crcYes(s, o) + (ev && !sandbox ? (R() * 2 - 1) * 5 : 0), pass = yes >= 50 || sandbox;
+      c.crcLog.push({ ...x, yes, res: pass ? 'passed' : 'failed' }); c.crc = null;
+      if (pass) { s.pol[x.lid] = x.oid; delete s.pending[x.lid]; rep.events.push({ k: 'good', t: 'Voters approve your Charter amendment', d: `"${o.name}" passes with ${yes.toFixed(0)}% yes. It becomes part of the City Charter without a Council vote, though the Council still writes the budget that pays for it.` }); }
+      else { s.support -= 1; rep.events.push({ k: 'bad', t: 'Voters reject your Charter amendment', d: `"${o.name}" gets only ${yes.toFixed(0)}% yes. The Council calls the commission a power grab.` }); }
+    }
+  }
 }
 // ---- Union contracts (Taylor Law: public-sector strikes are illegal in New York) ----
 const CONTRACTS = [
@@ -1442,7 +1506,7 @@ function step(s, o = {}) {
   B.baseExp *= Math.pow(1 + A.expGrowth + 0.48 * (wage - 3) / 100 + (F0.inflation || 0), 0.25);
   const shelterCost = (H.shelter - 85600) * 70000 / 1e9;
   const careOps = CC.newSeats * A.seatOp / 1e9 * (staffed);
-  const prog = fx.op + jgCost + trainCost * 4 + storeOps + careOps - wasteSave;
+  const prog = fx.op + jgCost + trainCost * 4 + storeOps + careOps - wasteSave + dealCost(s);
   const capTotal = Object.keys(C).reduce((a, k) => a + (k === 'water' ? 0 : k === 'stores' ? 0 : k === 'acq' && !flags.acquire ? 0 : k === 'build' ? C[k] * buildUse : C[k]), 0) / 4 + (s.ld.investDue > 0 ? Math.min(s.ld.investDue, 0.25) : 0) + storeCost + (s.pol.energy === 'e2' && E.conEdQ === 1 ? 60 : 0) + (s.pol.method === 'p2' && s.methodQ === 1 ? 1.5 : 0);
   let bonds = capTotal * P.bond / 100; let payGo = capTotal - bonds;
   if (s.b.fcb && !sandbox && P.cap && Object.values(P.cap).some(v => v > 0)) rep.notes.push('Financial Control Board: new capital spending is frozen until the budget balances.');
@@ -1527,6 +1591,8 @@ function step(s, o = {}) {
     }
   }
 
+  cnStep(s, rep, R, ev, sandbox);
+
   // --- random events ---
   let hurri = false;
   if (ev && !sandbox) {
@@ -1555,6 +1621,7 @@ function step(s, o = {}) {
   if (s.ec.top < 85) rep.notes.push('Tax base: top earners are leaving. They paid nearly half of city income tax, so this hits revenue directly.');
   if (s.info < 0.5) rep.notes.push('Planning: information quality is low, so results vary widely from targets. Train planners or change the method.');
   if (EL.ratio < 0.93) rep.notes.push(`Elder care: ${Math.round(EL.need - EL.aides).toLocaleString('en-US')} home-care aides short as the 65+ population grows. Short courses take one quarter.`);
+  if (((s.year === 2028 && s.q >= 3) || (s.year === 2029 && s.q <= 1)) && !cnOf(s).primDone && cnOf(s).prim === 'none' && s.mode === 'real') rep.notes.push('Council primaries in June 2029: about 36 of 51 seats are open. On the Politics tab you can back candidates who would vote for your plan.');
   if (s.year === 2029 && s.q <= 3 && !s.el2029) rep.notes.push(`Election in November 2029: projected vote share ${voteShare(s).toFixed(1)}%. Below 50% you lose office.`);
 
   s.t++; s.q++; if (s.q > 4) { s.q = 1; s.year++; }
@@ -1712,4 +1779,4 @@ function balances(s) {
 
 function fmt(n) { n = Math.round(n); return n.toLocaleString('en-US'); }
 
-if (typeof module !== 'undefined') module.exports = { auditChecks, ocInit, OC0, SITES, ldInit, proposeSite, sitesCap, siteChance, tollNow, scInit, hpInit, flInit, replayRent, replayPermits, REPLAY, ROAD0, SC0, HP0, cityInit, cityStep, hhSummary, backtest, BACKTEST, SUB_LINES, BIZ_SECT, GRID_SHAPE, cdLabel, JS0, jsInit, CLIMATE, cbInit, REGIMES, deepInit, LIVE, LV, U0, TAX0, TAXDEF, GROUPS, BLOCS, CONTRACTS, RAISE_OPTS, taxCalc, distribution, councilVote, propTaxVote, applyDecision, ratingName, lawRadical, SOURCES, BOROUGHS, SECTORS, LAWS, TRAIN, CAPITAL, HIST, CITIES, ASSUME, GOALDEF, newGame, step, project, balances, fxAll, snapshotKPIs, clone, cityPov, qLabel, fmt, optOf, solveGen, monteCarlo, sensitivity, evalPlan, voteShare, gap, goalVal, lite };
+if (typeof module !== 'undefined') module.exports = { dealPer, lawRadical, cnOf, seatsOf, grudgeOf, dealCost, dealQuote, makeDeal, primOpen, charterOptions, crcBallotYear, crcYes, startCRC, cnStep, PRIM, DEAL_VOTE, DEAL_MAX, OPEN_2029, CHARTER_OK, SEATS0, councilVote, auditChecks, ocInit, OC0, SITES, ldInit, proposeSite, sitesCap, siteChance, tollNow, scInit, hpInit, flInit, replayRent, replayPermits, REPLAY, ROAD0, SC0, HP0, cityInit, cityStep, hhSummary, backtest, BACKTEST, SUB_LINES, BIZ_SECT, GRID_SHAPE, cdLabel, JS0, jsInit, CLIMATE, cbInit, REGIMES, deepInit, LIVE, LV, U0, TAX0, TAXDEF, GROUPS, BLOCS, CONTRACTS, RAISE_OPTS, taxCalc, distribution, councilVote, propTaxVote, applyDecision, ratingName, lawRadical, SOURCES, BOROUGHS, SECTORS, LAWS, TRAIN, CAPITAL, HIST, CITIES, ASSUME, GOALDEF, newGame, step, project, balances, fxAll, snapshotKPIs, clone, cityPov, qLabel, fmt, optOf, solveGen, monteCarlo, sensitivity, evalPlan, voteShare, gap, goalVal, lite };

@@ -121,7 +121,8 @@ function lineChart(el, series, o = {}) {
   const xf = o.xf || tLab, yf = o.yf || (v => k1(v));
   const draw = () => {
     const W = el.clientWidth, H = el.clientHeight; if (!W || !H) return;
-    const m = { l: 56, r: o.rlab ? 96 : 16, t: 12, b: 26 };
+    const labLen = o.rlab ? Math.max(0, ...series.filter(x => x.name && x.lab !== false).map(x => String(x.name).length)) : 0;
+    const m = { l: 56, r: o.rlab ? Math.round(Math.min(Math.max(96, labLen * 6.4 + 16), W * 0.42)) : 16, t: 12, b: 26 };
     const all = series.flatMap(s => s.pts); if (!all.length) return;
     let x0 = Math.min(...all.map(p => p[0])), x1 = Math.max(...all.map(p => p[0]));
     if (x1 === x0) x1 = x0 + 1;
@@ -149,7 +150,11 @@ function lineChart(el, series, o = {}) {
       if (o.rlab && s.name && s.lab !== false) labs.push({ x: X(last[0]) + 8, y: Y(last[1]) + 4, t: s.name });
     });
     labs.sort((a, b) => a.y - b.y); for (let i = 1; i < labs.length; i++) if (labs[i].y - labs[i - 1].y < 14) labs[i].y = labs[i - 1].y + 14;
-    g += labs.map(l => `<text x="${l.x}" y="${l.y}" style="fill:var(--ink)">${esc(l.t)}</text>`).join('');
+    const fit = Math.max(6, Math.floor((m.r - 12) / 6.4));
+    const wrap = t => { if (t.length <= fit) return [t]; const w = t.split(' '); const out = ['']; w.forEach(x => { const c = out[out.length - 1]; if ((c + ' ' + x).trim().length > fit && c) out.push(x); else out[out.length - 1] = (c + ' ' + x).trim(); }); return out.slice(0, 2).map((x, i, a) => i === 1 && out.length > 2 ? x.slice(0, fit - 1) + '…' : x.length > fit ? x.slice(0, fit - 1) + '…' : x); };
+    labs.forEach(l => { l.lines = wrap(l.t); });
+    for (let i = 1; i < labs.length; i++) { const need = 14 * labs[i - 1].lines.length; if (labs[i].y - labs[i - 1].y < need) labs[i].y = labs[i - 1].y + need; }
+    g += labs.map(l => `<text x="${l.x}" y="${l.y}" style="fill:var(--ink)">${l.lines.map((t, i) => `<tspan x="${l.x}" dy="${i ? 13 : 0}">${esc(t)}</tspan>`).join('')}</text>`).join('');
     g += `<line id="cx" x1="0" x2="0" y1="${m.t}" y2="${H - m.b}" stroke="var(--ink2)" stroke-width="1" visibility="hidden"/>`;
     svg.innerHTML = g;
     svg.onmousemove = e => {
@@ -188,7 +193,7 @@ function header() {
   $('#qtr').textContent = qLabel(S);
   $('#prog').innerHTML = Array.from({ length: 20 }, (_, i) => `<span class="${i < S.t ? 'on' : i === S.t ? 'now' : ''}"></span>`).join('');
   const d = S.b.deficit;
-  $('#chips').innerHTML = `<span class="chip">Support <b>${pct(S.support, 0)}</b></span><span class="chip">Budget <b>${esc(bn(d))}</b>/yr</span><span class="chip opt2">Legal risk <b>${S.legal.toFixed(0)}</b></span><span class="chip opt2">Info <b>${pct(S.info * 100, 0)}</b></span><span class="chip opt2">Rating <b>${esc(ratingName(S.fin.notch).replace(' (S&P scale)', ''))}</b></span>${S.decision ? '<button class="chip" id="decChip" style="border:0;background:var(--warn);color:#000;cursor:pointer">Contract talks <b>decide</b></button>' : ''}${S.el2029 ? `<span class="chip" style="${S.el2029.won ? '' : 'background:var(--red);color:#fff'}">${S.el2029.won ? 'Re-elected' : 'Voted out'} <b>${pct(S.el2029.share)}</b></span>` : `<span class="chip">Nov 2029 vote <b>${pct(voteShare(S))}</b></span>`}${S.b.fcb ? '<span class="chip" style="background:var(--red);color:#fff">State control</span>' : ''}${S.mode === 'sandbox' ? '<span class="chip">Sandbox</span>' : ''}`;
+  $('#chips').innerHTML = `<span class="chip">Support <b>${pct(S.support, 0)}</b></span><span class="chip">Budget <b>${esc(bn(d))}</b>/yr</span><span class="chip opt2">Legal risk <b>${S.legal.toFixed(0)}</b></span><span class="chip opt2">Info <b>${pct(S.info * 100, 0)}</b></span><span class="chip opt2">Rating <b>${esc(ratingName(S.fin.notch).replace(' (S&P scale)', ''))}</b></span>${S.decision ? '<button class="chip" id="decChip" style="border:0;background:#f2b04a;color:#000;cursor:pointer">Contract talks <b>decide</b></button>' : ''}${S.el2029 ? `<span class="chip" style="${S.el2029.won ? '' : 'background:#000;color:#fff'}">${S.el2029.won ? 'Re-elected' : 'Voted out'} <b>${pct(S.el2029.share)}</b></span>` : `<span class="chip">Nov 2029 vote <b>${pct(voteShare(S))}</b></span>`}${S.b.fcb ? '<span class="chip" style="background:#000;color:#fff">State control</span>' : ''}${S.mode === 'sandbox' ? '<span class="chip">Sandbox</span>' : ''}`;
   { const n = S.decBase ? decChanges().length : 0; const q = $('#queued'); if (q) { q.hidden = false; q.innerHTML = n ? `Decisions <b>${n}</b>` : 'Decisions'; q.title = n ? `${n} change${n > 1 ? 's' : ''} queued for this quarter` : 'Every choice for this quarter on one page'; q.classList.toggle('has', n > 0); q.onclick = () => { tab = 'decide'; render(); window.scrollTo({ top: 0 }); }; } }
   $('#undo').disabled = !undoStack.length;
   const dc = $('#decChip'); if (dc) dc.onclick = decisionModal;

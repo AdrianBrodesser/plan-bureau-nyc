@@ -2382,6 +2382,7 @@ function startScreen() {
   const dn = $('#dataNote'); if (dn) { const na = Object.values(LIVE.values || {}).filter(x => x.method === 'auto').length; dn.textContent = `Last data update: ${LIVE.generated || 'n/a'}` + (na ? ` · ${na} figures refreshed automatically` : ''); }
   if (!shared && saved && saved.v === 3 && saved.t > 0) { $('#resumeNote').innerHTML = `A saved plan exists (${esc(qLabel(saved))}). <button class="btn" id="resume" style="margin-left:8px">Resume it</button>`; $('#resume').onclick = () => boot(saved); }
   $('#pgfx').innerHTML = (POSTERS[(SITE && SITE.poster) || 'star'] || POSTERS.star)();
+  { const g = $('#pgfx'), fit = () => g.setAttribute('preserveAspectRatio', innerWidth >= 1700 ? 'xMinYMid slice' : 'xMaxYMax meet'); fit(); addEventListener('resize', fit); }
   $('#introOpen').onclick = () => openIntro(0);
   $('#whyOpen').onclick = openPrologue;
   $('#teachOpen').onclick = openTeach; $('#teachTop').onclick = openTeach;

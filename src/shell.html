@@ -196,6 +196,7 @@ details summary{cursor:pointer;color:var(--s1);font-size:13px}
 /* start poster */
 .start{min-height:100vh;background:var(--paper);color:var(--ink);position:relative;overflow:hidden}
 .pgfx{position:absolute;right:-4vw;top:0;height:100%;width:min(64vw,900px);pointer-events:none}
+@media(min-width:1700px){.pgfx{left:calc((100vw - 1240px) / 2 + 440px);right:auto;width:calc(50vw + 180px)}}
 .pgfx .sky rect{fill:var(--ink)}
 .start .wrap{position:relative;padding-block:clamp(18px,3vw,34px) clamp(28px,5vw,60px);min-height:100vh;display:flex;flex-direction:column}
 .ptop{display:flex;align-items:center;gap:12px}

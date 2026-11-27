@@ -1,0 +1,801 @@
+{
+ "pop": {
+  "label": "NYC Dept. of City Planning, Population Estimates & Trends (Mar 2026): 8,585,000 in July 2025",
+  "url": "https://s-media.nyc.gov/agencies/dcp/assets/files/pdf/data-tools/population/population-estimates/new-york-city-population-estimates-and-trends-march-2026.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "qf": {
+  "label": "U.S. Census Bureau QuickFacts, V2025 county estimates and ACS 2020–2024",
+  "url": "https://www.census.gov/quickfacts/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "pov": {
+  "label": "NYC Council Data Team, Poverty and Food Insecurity (ACS 2024 poverty by borough)",
+  "url": "https://council.nyc.gov/data/data-team/emergency-food-in-nyc/",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "bor.*.pov"
+ },
+ "furman": {
+  "label": "NYU Furman Center, Neighborhood profiles (2024 median income, Bronx & Queens)",
+  "url": "https://furmancenter.org/neighborhoods/view/queens",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "bor.*.inc"
+ },
+ "unemp": {
+  "label": "NYS Dept. of Labor, NYC region profile, May 2026 (borough unemployment)",
+  "url": "https://dol.ny.gov/system/files/documents/2026/07/new-york-city.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "bor.*.unemp"
+ },
+ "unempSep": {
+  "label": "NYS Dept. of Labor, Sept 2026 release: NYC unemployment 4.8%",
+  "url": "https://dol.ny.gov/nys-private-sector-employment-increases-6700-jobs-september-2026",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "city.unemp"
+ },
+ "jobs": {
+  "label": "NYC Comptroller, New York by the Numbers No. 118 (Oct 2026), Table 1, Sept 2026",
+  "url": "https://comptroller.nyc.gov/newsroom/newsletter/new-york-by-the-numbers-monthly-economic-and-fiscal-outlook-no-118-oct-2026/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "hvs": {
+  "label": "NYC HPD, 2023 Housing & Vacancy Survey: 1.41% vacancy, 3,705,000 units, ~1M stabilized",
+  "url": "https://www.nyc.gov/site/hpd/news/007-24/new-york-city-s-vacancy-rate-reaches-historic-low-1-4-percent-demanding-urgent-action-new-affordable-housing",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "completions": {
+  "label": "NYC DCP via Commercial Observer: 38,682 units completed in 2025 (most since 1965)",
+  "url": "https://commercialobserver.com/2026/06/nyc-multifamily-construction-boom/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "permits": {
+  "label": "NYU Furman Center, State of the City 2025: 17,669 units permitted in 2025",
+  "url": "https://www.furmancenter.org/soc-report/state-of-the-city-2025/state-of-the-citys-housing-stock-2025/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "shortfall": {
+  "label": "CRE Daily / WSJ: ~400,000-unit housing shortfall; 43,000 units under construction Q1 2026",
+  "url": "https://www.credaily.com/briefs/new-york-apartment-construction-hits-a-60-year-high/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "cost909": {
+  "label": "The Real Deal (Mar 2026): Harlem affordable project at $909,000 per unit",
+  "url": "https://therealdeal.com/new-york/2026/03/25/four-seized-harlem-lots-get-affordable-units-for-909k-each",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "nycha": {
+  "label": "NYCHA FY2026 Annual Plan & MMR 2025: 177,565 apartments, 513,428 residents, $78.3B 20-yr needs",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/mmr2025/nycha.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "nychaCap": {
+  "label": "NYCHA budget testimony (Mar 2025): ~$3B available for capital in 2025",
+  "url": "https://www.nyc.gov/assets/nycha/downloads/pdf/speeches-testimonies/20250310-preliminary-budget-testimony.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "shelter": {
+  "label": "Mayor's Management Report (prelim. FY2026): ~85,600 people in DHS shelter per day",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/pmmr2026/dhs.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "street": {
+  "label": "NYS Comptroller (Mar 2026): street homelessness 4,504 in FY2025",
+  "url": "https://www.osc.ny.gov/press/releases/2026/03/dinapoli-report-analyzes-increases-nycs-unsheltered-population-and-spending",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "rentFreeze": {
+  "label": "City & State (Jun 2026): Rent Guidelines Board freezes rent on ~1M stabilized units, 7–1 vote",
+  "url": "https://www.cityandstateny.com/policy/2026/06/new-york-city-freezing-rent/414448/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "foodFlow": {
+  "label": "NYC Mayor's Office of Food Policy testimony (2025): ~19 billion lb of food flow through NYC yearly",
+  "url": "https://www.nyc.gov/assets/foodpolicy/downloads/pdf/testimony-250428-infrastructure-cost-quality-produce.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "huntsPoint": {
+  "label": "NYC Food Policy Center: Hunts Point distributes ~4.5B lb/yr, about half stays in NYC",
+  "url": "https://www.nycfoodpolicy.org/?p=30886",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "foodInsec": {
+  "label": "NYC Food by the Numbers 2024: 14.6% food insecure (over 1.2M New Yorkers)",
+  "url": "https://www.nyc.gov/assets/foodpolicy/downloads/pdf/NYC-Food-by-the-Numbers-2024.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "snap": {
+  "label": "NYC Council: 1,777,892 SNAP recipients (Sept 2025); $5.1B SNAP spending FY25",
+  "url": "https://council.nyc.gov/data/data-team/emergency-food-in-nyc/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "grocery": {
+  "label": "NYC Mayor's Office (Apr 2026): La Marqueta first site of 5 city-owned grocery stores",
+  "url": "https://www.nyc.gov/mayors-office/news/2026/04/mayor-mamdani-announces-la-marqueta-as-first-site-identified-for",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "grocery30": {
+  "label": "NPR (Jul 2026): city stores to price core staples 30% below typical retail",
+  "url": "https://www.npr.org/2026/07/28/g-s1-135938/mamdani-nyc-grocery-stores",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "groceryCost": {
+  "label": "CoStar (Apr 2026): East Harlem store build-out about $30M; $70M requested for five",
+  "url": "https://www.costar.com/article/1069845986/new-york-plans-city-owned-grocery-store-in-east-harlem",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "energy": {
+  "label": "Urban Green Council: Zone J (NYC) needs ~50 million MWh per year (NYISO 2025 Gold Book)",
+  "url": "https://www.urbangreencouncil.org/nyc-grid-in-transition/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "peak": {
+  "label": "NYISO 2026 IRM forecast: Zone J weather-normalised peak ≈ 11,005 MW (Jul 29, 2025)",
+  "url": "https://www.nysrc.org/wp-content/uploads/2025/09/2026_IRM_Forecast_ICS_V2.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "star": {
+  "label": "NYISO 2025 Q4 STAR assumptions: Zone J summer deficiency of ~21–99 MW, 2027–2030",
+  "url": "https://www.nyiso.com/documents/20142/54980909/03_2025%20Q4%20STAR%20Study%20Assumptions_vFinal.pdf/af2d7e29-adda-e3c8-64d3-cf618b10d1a6",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "osw": {
+  "label": "NYISO NYC PPTN (2025): 816 MW offshore wind identified for Zone J, +4,770 MW studied",
+  "url": "https://www.nyiso.com/documents/20142/52151333/NYCPPTN_ESPWG_2025_06_25.pdf/8e6b16fb-534a-c5d5-2614-9671fada1f4f",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "ghg": {
+  "label": "NYC Climate Office: citywide GHG −22% since 2005 (2023); ~70% of emissions from buildings (2024)",
+  "url": "https://www.urbangreencouncil.org/wp-content/uploads/2026/07/UGC_MOCEJ_GHG-Inventory.pptx.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "ghg2024": {
+  "label": "Ground News summary of NYC 2024 inventory: emissions down ~25% since 2005",
+  "url": "https://ground.news/article/greenhouse-gas-emissions-drop-to-pandemic-levels-in-sign-of-local-climate-laws-impact",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "transit": {
+  "label": "Governor's office (Jan 2026): ~1.3B subway and ~440M bus trips in 2025",
+  "url": "https://www.governor.ny.gov/news/governor-hochul-highlights-record-breaking-year-performance-and-ridership-mta-2025",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "fare": {
+  "label": "CBS New York: base fare rose from $2.90 to $3.00 on Jan 4, 2026",
+  "url": "https://www.cbsnews.com/newyork/news/mta-fare-hikes-nyc-subway-ride-cost-2026",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "farebox": {
+  "label": "MTA financial report: 2025 subway farebox ≈ $2.97B, bus ≈ $0.65B",
+  "url": "https://www.mta.info/document/196871",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "mtaBudget": {
+  "label": "NYS Comptroller (Oct 2026): MTA 2026 operating budget $21.9B",
+  "url": "https://www.osc.ny.gov/press/releases/2026/10/dinapoli-mta-financial-outlook-stable-short-run-gaps-loom-costs-rise",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "life": {
+  "label": "NYC Health Dept. (Dec 2025): life expectancy 82.6 years in 2023; 83.2 provisional 2024",
+  "url": "https://www.nyc.gov/site/doh/about/press/pr2025/2023-statistics-show-increased-life-expectancy-for-new-yorkers.page",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "schools": {
+  "label": "NYC Mayor's Management Report 2026: 884,600 district + 150,900 charter students (2025–26)",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/mmr2026/doe.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "doeBudget": {
+  "label": "NYC Public Schools: $44.6B budget for 2025–26",
+  "url": "https://www.schools.nyc.gov/about-us/funding/funding-our-schools",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "classSize": {
+  "label": "NYC IBO (Dec 2025): progress toward class size compliance, teachers needed and cost",
+  "url": "https://www.ibo.nyc.gov/assets/ibo/downloads/pdf/education/2025/2025-december-a-slow-start-limited-progress-in-first-years-towards-class-size-compliance.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "budget": {
+  "label": "NYC Comptroller: FY2027 Adopted Budget totals $125.84B",
+  "url": "https://comptroller.nyc.gov/reports/comments-on-new-york-citys-fiscal-year-2027-adopted-budget/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "stateAid": {
+  "label": "NYS Comptroller: >$21B (17%) of FY2027 revenue from State aid, about double federal",
+  "url": "https://www.osc.ny.gov/files/reports/osdc/pdf/01-state-grants-to-nyc-overview.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "taxes26": {
+  "label": "KBRA report: FY2026 city tax collections ≈ $85.4B",
+  "url": "https://comptroller.nyc.gov/wp-content/uploads/2026/08/Kroll-Report-NYC-GO-2027A.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "propTax37": {
+  "label": "NYS Comptroller (Jun 2026): proposed property tax increase est. $3.7B in FY2027 (dropped)",
+  "url": "https://www.osc.ny.gov/press/releases/2026/06/dinapoli-nyc-executive-budget-currently-balanced-risks-threaten-long-term-fiscal-stability",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "top1": {
+  "label": "NYC Comptroller: top 1% of filers paid 48% of NYC PIT (2021); top 1% got 37% of income (2024)",
+  "url": "https://comptroller.nyc.gov/reports/spotlight-nyc-personal-income-tax-2019-2021/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "gdp": {
+  "label": "Federal Reserve Bank of New York: NYC GDP 2023 = $1,286B",
+  "url": "https://www.newyorkfed.org/regional-economy/profiles/newyorkcity",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "budgetGap": {
+  "label": "NYS Comptroller: risk-adjusted out-year gaps ≈ $10.4B per year",
+  "url": "https://www.osc.ny.gov/press/releases/2026/06/dinapoli-nyc-executive-budget-currently-balanced-risks-threaten-long-term-fiscal-stability",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "water": {
+  "label": "NYC DEP 2026 Water Conservation Report: average demand 990 million gallons/day in 2025",
+  "url": "https://www.nyc.gov/assets/dep/downloads/pdf/water/drinking-water/water-conservation-report2026.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "city.water"
+ },
+ "breaks": {
+  "label": "NYC Comptroller audit (2025): water main breaks rose 54% in FY2025; FY2024 record low was 359",
+  "url": "https://comptroller.nyc.gov/reports/audit-of-the-new-york-city-department-of-environmental-protections-leak-detection-program",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "depCap": {
+  "label": "NYC Water Board FY26 rate proposal: $33.3B ten-year DEP capital plan; typical homeowner bill $1,224/yr",
+  "url": "https://www.nyc.gov/assets/nycwaterboard/downloads/pdf/rates/fy26-rate-proposal-brooklyn.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "dsny": {
+  "label": "DSNY FY2025 statistics: DSNY-managed diversion rate 18.8%",
+  "url": "https://www.nyc.gov/assets/dsny/downloads/resources/statistics/collection-diversion-fytd/fy2025/dsny-collections-fytd-2025-july-june.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "refuse": {
+  "label": "Mayor's Management Report: ~3.2 million tons of refuse disposed per year (FY2024)",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/pmmr2025/dsny.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "shootings": {
+  "label": "NYPD (Jan 2026): 688 shooting incidents in 2025, lowest on record",
+  "url": "https://www.nyc.gov/site/nypd/news/PR001/nypd-safest-year-ever-gun-violence-fewest-shooting-incidents-shooting-victims",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "city.shoot"
+ },
+ "nypd": {
+  "label": "AP via Yahoo (Dec 2025): NYPD headcount 34,700 after record hiring in 2025",
+  "url": "https://www.yahoo.com/news/articles/reform-minded-mayor-taking-over-120101426.html",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "ocs": {
+  "label": "CBS New York (Mar 2026): Office of Community Safety; NYPD handles ~200,000 mental health calls a year; $1.1B department promised",
+  "url": "https://www.cbsnews.com/newyork/news/mayor-mamdani-nypd-nyc-response-mental-health-calls",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "ocs260": {
+  "label": "NY Post via AOL: Office of Community Safety launched with a $260M budget",
+  "url": "https://www.aol.com/articles/mamdani-unveils-pared-version-hyped-145025139.html",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "prek": {
+  "label": "NYC Mayor's Office (May 2026): universal 3-K and Pre-K for nearly 100,000 children",
+  "url": "https://www.nyc.gov/mayors-office/news/2026/05/mayor-mamdani-and-governor-hochul-extend-nearly-100-000-3-k--pre",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "twoK": {
+  "label": "Governor's office (Oct 2026): 2-K grows from 2,000 seats to 12,000 in fall 2027; $1.2B State investment",
+  "url": "https://www.governor.ny.gov/news/governor-hochul-and-mayor-mamdani-unveil-phase-two-2-k-expansion-bringing-total-number-seats",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "vouchers": {
+  "label": "Amsterdam News (Mar 2026): ACS child-care vouchers support ~109,000 children",
+  "url": "https://amsterdamnews.com/news/2026/03/19/mamdani-s-universal-childcare-adds-more-seats-for-families-in-need/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "careCost": {
+  "label": "NYC Mayor's Office (Feb 2026): child care can cost more than $26,000 a year",
+  "url": "https://www.nyc.gov/mayors-office/news/2026/02/ahead-of-feb--27-deadline--mayor-mamdani-urges-families-to-apply.html",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "cuny": {
+  "label": "Governor's office (Jan 2026): CUNY Fall 2025 enrollment about 247,000",
+  "url": "https://www.governor.ny.gov/news/governor-hochul-announces-third-consecutive-rise-student-enrollment-city-university-new-york",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "old": {
+  "label": "NYS Comptroller (Jan 2025): 1.43 million New Yorkers aged 65+ in 2023, up 53% since 2000",
+  "url": "https://www.osc.ny.gov/press/releases/2025/01/dinapoli-more-older-adults-calling-nyc-home-ever-comptrollers-report-finds",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "aides": {
+  "label": "NY Senate testimony: 187,000 home health workers in NYC; projected statewide shortages",
+  "url": "https://www.nysenate.gov/sites/default/files/chinese-american_planning_council_cpc_testimony.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "enroll": {
+  "label": "NYC Comptroller: School Construction Authority projects a further 128,000 enrollment drop by 2034–35",
+  "url": "https://comptroller.nyc.gov/reports/tracking-the-k-12-student-population-in-nyc",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "vote2025": {
+  "label": "NBC News: 2025 general election, Mamdani 50.4%, Cuomo 41.6%, Sliwa 7.1%",
+  "url": "https://www.nbcnews.com/politics/2025-elections/new-york-city-mayor-results",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "pitRates": {
+  "label": "NYC IBO (Feb 2026): four PIT rates from 3.078% to 3.876%",
+  "url": "https://www.ibo.nyc.gov/assets/ibo/downloads/pdf/press-releases/2026/2026-pit-2023-tables-press-release.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "propRates": {
+  "label": "NYC Dept. of Finance FY2026 annual report: class rates 19.843/12.439/11.108/10.848%, levy $37.98B, class shares 14.3/39.2/8.3/38.3%",
+  "url": "https://www.nyc.gov/assets/finance/downloads/pdf/reports/Annual Report FY26 7-8-26 FINAL.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "taxForecast": {
+  "label": "NYC Council June 2026 tax forecast: FY2027 total taxes ≈ $89.9B by tax type",
+  "url": "https://council.nyc.gov/press/wp-content/uploads/sites/56/2026/06/June-2026_Economic-and-Tax-Revenue-Forecast.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "pat": {
+  "label": "Steptoe (2026): pied-à-terre tax approved May 27, 2026, effective July 1, 2026 to 2031, ≥$500M/yr",
+  "url": "https://www.steptoe.com/en/news-publications/new-york-citys-new-pied-a-terre-tax-effective-july-1-2026.html",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "incomeShares": {
+  "label": "NYC Comptroller: top 10% (≈500k tax units, avg $687k) got 63% of income in 2024; top 1% 37%",
+  "url": "https://comptroller.nyc.gov/reports/recent-trends-in-personal-income-wage-inequality/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "rentBurden": {
+  "label": "NYU Furman Center: in 2023 more than half of renter households were rent burdened, about one in four severely",
+  "url": "https://www.furmancenter.org/?p=19363",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "council": {
+  "label": "City & State (Jan 2026): Progressive Caucus has 24 of 51 Council members; Speaker Julie Menin is a moderate",
+  "url": "https://www.cityandstateny.com/politics/2026/01/meet-new-bigger-city-council-progressive-caucus/410777/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "councilR": {
+  "label": "JNS (Jan 2026): Menin elected 51–0; five Republicans on the Council",
+  "url": "https://www.jns.org/julie-menin-elected-ny-city-councils-first-jewish-speaker/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "unions": {
+  "label": "Vital City: bargaining calendar (DC 37 expires Nov 2026, UFT Nov 2027, PBA/UFA expired July 2025); 3% raises ≈ +$1B in year one",
+  "url": "https://www.vitalcitynyc.org/union-contracts-mamdani-budget/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "ratings": {
+  "label": "NYC Comptroller (Mar 2026): GO ratings Moody's Aa2, S&P AA, Fitch AA, KBRA AA+; three outlooks cut to negative",
+  "url": "https://comptroller.nyc.gov/reports/the-risks-to-the-citys-credit-ratings",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "pension": {
+  "label": "NYC Comptroller (Aug 2026): pension funds $326.3B, 13% return vs 7% target, cuts contributions ≈$6.3B over five years",
+  "url": "https://comptroller.nyc.gov/newsroom/nyc-comptroller-levine-and-pension-trustees-announce-robust-13-pension-aggregate-return-for-fiscal-year-2026/",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "pension10": {
+  "label": "NYC OMB: the City pays nearly $10 billion in pension contributions annually",
+  "url": "https://www.nyc.gov/assets/omb/downloads/pdf/exec26/sum5-26.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "commuters": {
+  "label": "Regional Plan Association: ~1 million suburban residents work for NYC employers, earning $141B",
+  "url": "https://rpa.org/news/news-release/new-regional-plan-association-report-finds-increased-economic-interdependence-between-new-york-city-and-suburbs-despite-rise-in-remote-work-patterns",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "flood": {
+  "label": "Rebuild by Design: 1.3 million New Yorkers live within or next to the 100-year floodplain",
+  "url": "https://rebuildbydesign.org/who-lives-in-nycs-floodplain/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "heat": {
+  "label": "NYC Health Dept. (2026): approximately 500 heat-related deaths a year",
+  "url": "https://www.nyc.gov/site/doh/about/press/pr2026/nyc-health-department-releases-report-on-heat-related-deaths.page",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "elurp": {
+  "label": "Holland & Knight (Jul 2026): 2025 Charter reform lets affordable projects finish review in ≈90 days vs ≈7 months",
+  "url": "https://www.hklaw.com/en/insights/publications/2026/07/new-york-citys-affordable-housing-fast-track-comes-into-focus",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "speed": {
+  "label": "NYC SPEED report (May 2026): cut pre-certification from two years to six months",
+  "url": "https://www.nyc.gov/content/dam/nycgov/nyc-main/pdf/2026/speed_report_051326.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "cdBounds": {
+  "label": "NYC Department of City Planning: Community District boundaries (clipped to shoreline), NYC Open Data, downloaded Nov 2026",
+  "url": "https://data.cityofnewyork.us/d/5crt-au7u",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "cdProfiles": {
+  "label": "NYC Department of City Planning: Community District Profiles data (ACS 2014–18 by PUMA, crime 2019, PLUTO 20v7, floodplain population)",
+  "url": "https://communityprofiles.planning.nyc.gov/",
+  "verified": "2026-11-25",
+  "reviewMonths": null,
+  "autoUpdates": "cd.*"
+ },
+ "payroll": {
+  "label": "NYC OMB FY2026 adopted expense budget: personal services $60.7B",
+  "url": "https://www.nyc.gov/assets/omb/downloads/pdf/adopt26/adopt26-expreso.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 6
+ },
+ "nychaWait": {
+  "label": "NYC IBO: 241,000 families on NYCHA waitlist",
+  "url": "https://www.ibo.nyc.gov/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "nychaTurn": {
+  "label": "NYCHA Fact Sheet 2023: turnover 2.3%",
+  "url": "https://nyc.gov/assets/nycha/downloads/pdf/NYCHA-Fact-Sheet-2023.pdf",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "lottery": {
+  "label": "HPD: 6M applications for 10,000 units (2024)",
+  "url": "https://qns.com/2025/05/housing-lottery-6-million-applications/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "lateContracts": {
+  "label": "NYC Council: 80.65% contracts registered late FY2024",
+  "url": "https://council.nyc.gov/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "commute": {
+  "label": "ACS mean commute by borough",
+  "url": "https://fred.stlouisfed.org/",
+  "verified": "2026-11-25",
+  "reviewMonths": 12
+ },
+ "ll97": {
+  "label": "NYC Local Law 97 of 2019: building emissions caps; citywide 40% below 2005 by 2030, 80% by 2050",
+  "url": "https://www.nyc.gov/site/sustainablebuildings/ll97/local-law-97.page",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "ipcc15": {
+  "label": "IPCC AR6 Synthesis Report (2023): 1.5 °C pathways cut GHG ~43% by 2030 and ~60% by 2035 vs 2019",
+  "url": "https://www.ipcc.ch/report/ar6/syr/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rcb": {
+  "label": "Forster et al. (2026), Indicators of Global Climate Change 2025: ~130 Gt CO2 remaining for 1.5 °C (50%) from start of 2026",
+  "url": "https://essd.copernicus.org/articles/18/3889/2026/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "crime25": {
+  "label": "NYPD year-end 2025: 121,542 major felonies, 305 murders, 688 shootings",
+  "url": "https://www.nyc.gov/site/nypd/news/PR001/nypd-safest-year-ever-gun-violence-fewest-shooting-incidents-shooting-victims",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "nypdBudget": {
+  "label": "NYC Council: NYPD Fiscal 2027 preliminary budget $6.7B; about 35,000 uniformed officers budgeted",
+  "url": "https://council.nyc.gov/budget/wp-content/uploads/sites/54/2026/03/New-York-Police-Department.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "jail26": {
+  "label": "Mayor's Management Report FY2026: jail average daily population 6,954",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/mmr2026/doc.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "od": {
+  "label": "NYC Health Department via NY1: 1,873 overdose deaths in 2025 (3,070 in 2019)",
+  "url": "https://ny1.com/nyc/all-boroughs/news/2026/11/13/nyc-overdose-deaths-fall-to-lowest-level-since-2019--mamdani-says",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "evict": {
+  "label": "NYC DOI: marshals executed about 16,850 residential evictions in 2024; about 1,500 a month in 2025",
+  "url": "https://www.nyc.gov/site/doi/offices/nyc-marshals.page",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "projDelay": {
+  "label": "NYS Comptroller (2024): 5,128 NYC capital projects, 64% delayed, 48.4% three or more years late, ~18% overall overrun",
+  "url": "https://www.osc.ny.gov/files/reports/pdf/report-1-2025.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "ddcAudit": {
+  "label": "NYC Comptroller audit of DDC (Dec 2025): 80% of projects behind schedule, average delay about 3.5 years",
+  "url": "https://comptroller.nyc.gov/reports/audit-report-of-the-department-of-design-and-constructions-mitigation-of-delays-and-cost-overruns-on-capital-construction-projects",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "nyisoWinter": {
+  "label": "NYISO: grid is summer-peaking and will shift to winter-peaking with electrification",
+  "url": "https://www.nyiso.com/documents/20142/23494579/2025-Power-Trends-Fact-Sheet.pdf/c0eb52f2-806b-8813-a0cf-171475cf0790",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "heatDeaths": {
+  "label": "NYC Health Department 2025 Heat-Related Mortality Report: about 525 heat-related deaths a year (2018-2022)",
+  "url": "https://www.nyc.gov/site/doh/about/press/pr2025/health-department-releases-report-on-heat-related-mortality.page",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "edcBiz": {
+  "label": "NYCEDC Economic Snapshot: about 19,800 businesses started in 2025; 3,500 openings vs 8,400 closures in Q2 2025",
+  "url": "https://edc.nyc/sites/default/files/2026-06/NYCEDC-NYC-Economic-Snapshot-June-2026.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "lexCrowd": {
+  "label": "MTA rider report via NBC New York: 4 train at 112% of the loading guideline in the AM rush",
+  "url": "https://www.nbcnewyork.com/news/local/6-7-l-trains-tie-for-best-service-report/2103460/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "cbcMig": {
+  "label": "Citizens Budget Commission (Apr 2026): NYC net domestic out-migration ≈114,000 in 2025, across every income group",
+  "url": "https://www.amny.com/news/nyc-economy-report-fleeing-residents-income/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rpaComm": {
+  "label": "Regional Plan Association, Commuter Dividend: ≈1 million commuters, 22% of NYC's workforce, $141B in earnings",
+  "url": "https://rpa.org/work/reports/commuter-dividend",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "dmq": {
+  "label": "Diamond, McQuade & Qian (2019, AER): rent control cut rental supply in covered San Francisco buildings by 15%",
+  "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20181289",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "hvs23": {
+  "label": "2023 Housing and Vacancy Survey: 26,310 rent-stabilized flats vacant and not available for rent",
+  "url": "https://www.thecity.nyc/2024/02/14/rent-stabilized-apartments-vacant/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rgbPioc": {
+  "label": "Rent Guidelines Board 2026 Price Index of Operating Costs: costs of stabilized buildings up 5.3% in a year",
+  "url": "https://therealdeal.com/new-york/2026/04/09/rent-stabilized-landlords-saw-5-3-price-growth-rgb",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rgbSales": {
+  "label": "Rent Guidelines Board chair statement 2025: price per flat in fully stabilized buildings $175,225 in 2024, −37.6% in real terms",
+  "url": "https://rentguidelinesboard.cityofnewyork.us/wp-content/uploads/2025/06/2025-Chair-Statement.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rauhShyu": {
+  "label": "Rauh & Shyu (2024, AEJ: Policy): 45% of California's 2012 top-rate windfall lost in year one, 61% within two years",
+  "url": "https://www.nber.org/papers/w26349",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "dobMMR": {
+  "label": "Mayor's Management Report 2026, Department of Buildings: 25.4 days from filing to approval, 5% more reviews",
+  "url": "https://www.nyc.gov/assets/operations/downloads/pdf/mmr2026/dob.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "nybc": {
+  "label": "New York Building Congress: ≈$74B of construction in NYC in 2025, $69B in 2026, $75B in 2027",
+  "url": "https://buildingcongress.com/report/2025-2027-new-york-city-construction-outlook-report/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "vacancy26": {
+  "label": "NYC Comptroller (2026): 15,530 vacant city positions, 5.1% of authorized headcount",
+  "url": "https://comptroller.nyc.gov/reports/the-phantom-of-the-opera-ting-budget/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "willets": {
+  "label": "NYCEDC: Willets Point, 2,500 affordable homes; phase 2 delivers the remaining 1,400",
+  "url": "https://edc.nyc/node/7134",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rezonings": {
+  "label": "NYC Council and DCP (2024–25): Midtown South 9,500, Long Island City 14,700, Jamaica ≈12,000, Atlantic Ave 4,600, Bronx Metro-North 7,000 homes",
+  "url": "https://therealdeal.com/new-york/2025/11/12/city-council-approves-long-island-city-rezoning",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "landBank": {
+  "label": "NYC Comptroller (2016): 53,116 affordable homes possible on 1,459 vacant city-owned properties",
+  "url": "https://comptroller.nyc.gov/reports/building-an-affordable-future-the-promise-of-a-new-york-city-land-bank",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "nychaLand": {
+  "label": "Citizens Budget Commission (2018): NYCHA campuses could take 58 million sq ft more; Manhattan BP (2008): 30.5 million sq ft ≈ 35,000 homes in Manhattan",
+  "url": "https://www.cbcny.org/research/nychas-untapped-assets",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "bmt": {
+  "label": "NYC Mayor's Office (Sept 2025): Brooklyn Marine Terminal vision plan, 6,000 homes incl. 2,400 permanently affordable",
+  "url": "https://www.nyc.gov/mayors-office/news/2025/09/mayor-adams--governor-hochul--representative-goldman--senator-go",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "sunnyside": {
+  "label": "The Real Deal (2020): Sunnyside Yard master plan, 12,000 affordable homes on a $14.4B deck",
+  "url": "https://therealdeal.com/2020/03/03/city-unveils-vision-for-gargantuan-sunnyside-yard-project",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "charter2025": {
+  "label": "NYC Charter Revision Commission (2025): affordable housing fast track and Appeals Board, approved by voters in November 2025",
+  "url": "https://www.nyc.gov/assets/charter/html/2025-CRC-Final-Report.html",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "congestion": {
+  "label": "Governor's office (Jan 2026): first year of congestion pricing, 27 million fewer vehicles, −11%, transit ridership up",
+  "url": "https://www.governor.ny.gov/news/less-traffic-better-transit-its-first-anniversary-governor-hochul-celebrates-transformational",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "tollSchedule": {
+  "label": "MTA: $9 peak toll, rising to $12 in 2028 and $15 in 2031",
+  "url": "https://www.mta.info/fares-tolls/tolls/congestion-relief-zone/about",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "classSize64": {
+  "label": "NYC DOE (Nov 2025): 64% of classes within the caps in 2025–26",
+  "url": "https://www.nyc.gov/mayors-office/news/2025/11/mayor-adams-and-chancellor-aviles-ramos-announce-new-york-city-p.html",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "hospBeds": {
+  "label": "NYC Council hearing (Oct 2024): Manhattan ≈6 hospital beds per 1,000 residents, Queens ≈1.4–1.65",
+  "url": "https://citymeetings.nyc/city-council/2024-10-29-0100-pm-committee-on-hospitals/chapter/council-member-lynn-schulman-addresses-the-impact-of-hospital-closures-in-new-york-city",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "hhBeds": {
+  "label": "NYC Health + Hospitals bed utilization FY26: 4,415 staffed acute beds, 78.8% occupied",
+  "url": "https://council.nyc.gov/budget/wp-content/uploads/sites/54/2026/03/Health-and-Hospitals-Corporation-Hospital-Bed-Utilization-Rate-1.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "npcc": {
+  "label": "NPCC 2024 via Columbia: sea level +0.36–0.48 m by the 2050s, +0.64–0.99 m by the 2080s",
+  "url": "https://academiccommons.columbia.edu/doi/10.7916/642w-kp49",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "nfipNYC": {
+  "label": "THE CITY (2021): 53,000 NYC properties with federal flood insurance, average premium $1,152",
+  "url": "https://www.thecity.nyc/2021/10/12/22723591/flood-insurance-hikes-haunt-homeowners",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rr2": {
+  "label": "Gourevitch et al.: Risk Rating 2.0 cut existing flood policies by 5–13%",
+  "url": "https://journalofcrr.com/research/03-07-gourevitch-et-al/",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "permits421": {
+  "label": "NYC DCP housing production snapshots: permits 68,637 in 2022, 16,359 in 2023, 15,626 in 2024",
+  "url": "https://www.nyc.gov/assets/planning/download/pdf/planning-level/housing-economy/2023-nyc-housing-production-snapshot.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "rgbDistress": {
+  "label": "Rent Guidelines Board income and expense studies: distressed buildings 5.5% (2019), 6.5% (2020), ≈10% (2022), 9.2% (2024)",
+  "url": "https://therealdeal.com/new-york/2024/03/28/rent-stabilized-profits-slip-7-in-old-buildings-in-bronx-disturbing-drop",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "pioc": {
+  "label": "Rent Guidelines Board price index of operating costs: 3.0% (2021), 4.2% (2022), 8.1% (2023), 3.9% (2024), 6.3% (2025)",
+  "url": "https://rentguidelinesboard.cityofnewyork.us/wp-content/uploads/2023/04/2023-PIOC.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "fiscal1975": {
+  "label": "Bond Buyer: in 1975 the city had $6B of short-term debt due within a year on a budget of about $15B",
+  "url": "https://www.bondbuyer.com/news/nyc-146-s-drop-dead-moment-in-1975-has-lessons-for-today",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ },
+ "permits2015": {
+  "label": "NYC DCP (2022): permits for about 60,500 homes in 2015, before the earlier 421-a lapse; 58,600 in the first half of 2022",
+  "url": "https://www.nyc.gov/assets/planning/download/pdf/planning-level/housing-economy/permitting-first-half-of-2022-info-brief.pdf",
+  "verified": "2026-11-26",
+  "reviewMonths": 12
+ }
+}

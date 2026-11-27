@@ -1,0 +1,82 @@
+name: Update data and deploy
+
+on:
+  schedule:
+    - cron: "17 6 3 * *"   # 06:17 UTC on the 3rd of every month
+  workflow_dispatch:        # "Run workflow" button in the Actions tab
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  issues: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Refresh live data
+        if: github.event_name != 'push'
+        env:
+          CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}
+          SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+        run: python scripts/update_data.py
+
+      - name: Test and build
+        run: |
+          python tests/test_update.py
+          python scripts/build.py
+          node tests/test_model.js && node tests/test_directions.js
+
+      - name: Commit refreshed data
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "plan-bureau-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/live.json data/update_report.md
+          if ! git diff --cached --quiet; then
+            git commit -m "Data update $(date -u +%F)"
+            git push
+          fi
+
+      - name: Open an issue for figures due a manual check
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/check_manual.py > stale.md
+          if [ -s stale.md ]; then
+            open=$(gh issue list --state open --search "Figures due for a check in:title" --json number --jq 'length')
+            if [ "$open" = "0" ]; then
+              gh issue create --title "Figures due for a check" --body-file stale.md
+            fi
+          fi
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

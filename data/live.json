@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-25",
+ "generated": "2026-11-27",
  "values": {
   "bor.BX.inc": {
    "v": 47600,
@@ -107,25 +107,28 @@
    "method": "seed"
   },
   "city.unemp": {
-   "v": 4.8,
-   "asOf": "Sept 2026",
-   "src": "NYS Dept. of Labor",
-   "url": "https://dol.ny.gov/",
-   "method": "seed"
+   "v": 5.0,
+   "asOf": "October 2026",
+   "src": "US Bureau of Labor Statistics, LAUS (New York city, not seasonally adjusted)",
+   "url": "https://data.bls.gov/timeseries/LAUCT365100000000003",
+   "method": "auto",
+   "fetched": "2026-11-27"
   },
   "city.water": {
-   "v": 990,
-   "asOf": "2025",
-   "src": "NYC DEP 2026 Water Conservation Report",
-   "url": "https://www.nyc.gov/site/dep/",
-   "method": "seed"
+   "v": 1002.0,
+   "asOf": "2024",
+   "src": "NYC Open Data: Water Consumption in the City of New York (DEP)",
+   "url": "https://data.cityofnewyork.us/d/ia2d-e54m",
+   "method": "auto",
+   "fetched": "2026-11-27"
   },
   "city.shoot": {
-   "v": 688,
-   "asOf": "2025",
-   "src": "NYPD",
-   "url": "https://www.nyc.gov/site/nypd/",
-   "method": "seed"
+   "v": 626.0,
+   "asOf": "12 months to 2026-09-28",
+   "src": "NYC Open Data: NYPD shooting incidents",
+   "url": "https://data.cityofnewyork.us/browse?q=NYPD%20shooting",
+   "method": "auto",
+   "fetched": "2026-11-27"
   }
  },
  "cd": {

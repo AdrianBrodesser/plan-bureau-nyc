@@ -853,6 +853,90 @@ function toyHTML(k) {
     <div class="fig" id="ttFig" style="height:240px"></div><div id="ttOut"></div><p class="note">Assumes 49 Mt in 2027. A global budget of about 130 Gt from the start of 2026 (Forster et al. 2026); the city used about 49 Mt of an equal share in 2026.</p></div>`;
   return '';
 }
+
+// ---------- guide: how the game works, as a reference page ----------
+const GUIDE_PAGES = {
+  decide: 'Every choice for this quarter in one place, with what you changed and what needs attention.',
+  overview: 'The ten targets for 2031: where you started, where you are, and where you are heading.',
+  laws: 'Change the rules: rent, land, energy, food, safety and more. Some need the Council, some need Albany.',
+  taxes: 'Draft a tax package and see who pays. Property tax is local; most other taxes need Albany.',
+  plan: 'Invest and train, and check that homes, builders, power and money add up. Red rows are shortfalls.',
+  economy: 'What happens inside the plan: queues, hoarding, black markets and protest.',
+  map: 'The 59 community districts. Compare neighbourhoods and set where new public homes go first.',
+  labor: 'Workers by sector, training pipelines, migration and an ageing population.',
+  services: 'Water, waste, subway, roads, schools and hospitals: the systems that must keep working.',
+  justice: 'Crime, jails, overdoses and evictions, with the evidence behind each lever.',
+  climate: 'Emissions against the 1.5 °C path, heat, floods and sea level rise.',
+  politics: 'Council blocs, Albany, unions and lenders, and the tools to shape the Council.',
+  budget: 'Where the money comes from and where it goes. Four deficit quarters hand the budget to the State.',
+  scenarios: 'Save versions of your plan and compare them across 40 possible futures.',
+  viz: 'Build your own chart from any indicators.',
+  trends: 'Your simulated history next to real historical data.',
+  learn: 'Six short lessons on how planning works and where it breaks.',
+  sources: 'Every figure and where it comes from, with checks on the model itself.',
+};
+function guideSteps() {
+  const lawCh = LAWS.some(l => S.pol[l.id] !== l.opts[0].id) || Object.keys(S.pending || {}).length > 0, gv = S.gv || {};
+  return [
+    { done: gv.decide != null, h: 'Open Decisions', p: 'See every choice for this quarter and what needs attention first.', go: 'decide', b: 'Open Decisions' },
+    { done: lawCh, h: 'Change one law', p: 'Pick a new option on the Laws page. Watch the Council count on the card before you click.', go: 'laws', b: 'Open Laws' },
+    { done: (S.plan.cap.build || 0) > 0, h: 'Invest in new homes', p: 'On Plan & balances, give "Public housing construction" money, then check whether there are enough builders.', go: 'plan', b: 'Open Plan & balances' },
+    { done: S.t >= 1, h: 'Run the first quarter', p: 'Press Run quarter in the top bar. Three months pass and a report explains what happened.', run: true, b: 'Run quarter' },
+    { done: S.t >= 1 && (gv.overview ?? -1) >= 1, h: 'Check the control figures', p: 'See how far each target moved, and what the dashed lines now project for 2031.', go: 'overview', b: 'Open Control figures' },
+  ];
+}
+function guideView() {
+  const st = guideSteps(), nDone = st.filter(x => x.done).length;
+  const node = (go, t, d) => `<button class="gnode" data-go="${go}"><b>${esc(t)}</b><span>${esc(d)}</span></button>`;
+  const col = (h, items, cls = '') => `<div class="gcol ${cls}"><h4>${esc(h)}</h4>${items.join('')}</div>`;
+  $('#v-guide').innerHTML = `<div class="course guide">
+  <header class="chero"><div class="chero-t"><h1 class="ph">How the game works</h1><p class="lead">A reference for while you play: what one quarter looks like, what each page is for, and how your choices travel through the city and come back to you.</p>
+    <div class="row"><button class="btn" id="gIntro">Replay the short intro</button><a class="btn" href="#g-first">First game in five moves</a></div></div>
+    <div class="ill chero-i">${ILL.quarter}</div></header>
+
+  <section class="gsec" id="g-loop"><h2>One quarter, step by step</h2>
+    <p class="note">The game runs from January 2027 to December 2031: 20 quarters of three months each.</p>
+    <ol class="gloop">
+      <li><b>Decide</b><span>Change laws, taxes, investment and training. Nothing happens yet; you can undo.</span><button class="btn" data-go="decide">Decisions</button></li>
+      <li><b>Run the quarter</b><span>Press Run quarter. Votes are counted, money is spent, and three months pass, with storms or recessions possible.</span></li>
+      <li><b>Read the report</b><span>A report lists what passed, what failed and what changed. Events explain the surprises.</span></li>
+      <li><b>Adjust</b><span>Check the control figures and the red rows on Plan & balances, then decide again.</span><button class="btn" data-go="overview">Control figures</button></li>
+    </ol>
+    <p class="gback" aria-hidden="true">↺ and again, 20 times</p>
+  </section>
+
+  <section class="gsec" id="g-pages"><h2>Every page in one sentence</h2>
+    <div class="gpages">${TAB_GROUPS.map(([g, ids]) => `<div><h4>${esc(g)}</h4>${ids.filter(id => GUIDE_PAGES[id]).map(id => `<button class="gpage" data-go="${id}"><b>${esc(TABS.find(x => x[0] === id)[1])}</b><span>${esc(GUIDE_PAGES[id])}</span></button>`).join('')}</div>`).join('')}</div>
+  </section>
+
+  <section class="gsec" id="g-model"><h2>How the model connects</h2>
+    <p class="note">Follow the arrows. Every box opens the page where you see or change it. The loop back is what makes it hard: results change public support, and support decides what you can do next.</p>
+    <div class="gflow">
+      ${col('1 · You choose', [node('laws', 'Laws', 'the rules'), node('taxes', 'Taxes', 'who pays'), node('plan', 'Investment and training', 'what gets built, who learns what')], 'gin')}
+      <div class="garr" aria-hidden="true"></div>
+      ${col('2 · Resources must add up', [node('budget', 'Money', 'budget, reserves, borrowing'), node('labor', 'Workers', 'builders, nurses, teachers'), node('plan', 'Land, power, materials', 'sites, grid, agency capacity')])}
+      <div class="garr" aria-hidden="true"></div>
+      ${col('3 · Results', [node('overview', 'Ten targets for 2031', 'homes, shelters, hunger, power, emissions, jobs, health, child care, support, budget'), node('map', 'Who gains, where', '59 districts, income groups')])}
+      <div class="garr" aria-hidden="true"></div>
+      ${col('4 · Reaction', [node('overview', 'Public support', 'rises with results, falls with costs and shortages'), node('labor', 'People and firms move', 'top earners, commuters, landlords')])}
+      <div class="garr" aria-hidden="true"></div>
+      ${col('5 · Who can stop you', [node('politics', 'Council', '26 of 51 votes'), node('politics', 'Albany', 'state law and most taxes'), node('budget', 'Lenders', 'rating and interest'), node('politics', 'Voters', 'November 2029')], 'gout')}
+    </div>
+    <div class="gloopback"><span>Support and these gatekeepers decide which choices are open to you next quarter</span></div>
+    <p class="note" style="margin-top:20px">From outside: storms, heat, recessions and Wall Street swings hit step 3 at random (<button class="lnk" data-go="climate">Climate</button>, <button class="lnk" data-go="economy">Economy</button>). Delays: a home takes about two years from start to keys, a trained nurse even longer, so today's choices show up in 2029.</p>
+  </section>
+
+  <section class="gsec" id="g-first"><h2>First game in five moves</h2>
+    <p class="note">These tick themselves off as you play. ${nDone} of ${st.length} done.</p>
+    <ol class="gfirst">${st.map((x, i) => `<li class="${x.done ? 'done' : ''}"><span class="gchk" aria-hidden="true">${x.done ? '✓' : i + 1}</span><div><b>${esc(x.h)}</b>${x.done ? ' <span class="note">done</span>' : ''}<p>${esc(x.p)}</p></div>${x.done ? '' : x.run ? `<button class="btn go" id="gRun">${esc(x.b)}</button>` : `<button class="btn" data-go="${x.go}">${esc(x.b)}</button>`}</li>`).join('')}</ol>
+    ${nDone === st.length ? '<p><b>That is the whole loop.</b> From here on, the Decisions page tells you what needs attention each quarter.</p>' : ''}
+  </section></div>`;
+  const v = $('#v-guide');
+  $$('[data-go]', v).forEach(x => x.onclick = () => { tab = x.dataset.go; render(); window.scrollTo({ top: 0 }); try { history.replaceState(null, '', '#' + tab); } catch (e) { } });
+  $('#gIntro').onclick = () => openIntro(0);
+  const r = $('#gRun'); if (r) r.onclick = () => { const n = $('#next'); if (n) n.click(); };
+  const a = v.querySelector('a[href="#g-first"]'); if (a) a.onclick = e => { e.preventDefault(); $('#g-first').scrollIntoView({ behavior: 'smooth' }); };
+}
 function learnView() {
   $('#v-learn').innerHTML = `<div class="course">
   <header class="chero"><div class="chero-t"><h1 class="ph">Planning, in six lessons</h1><p class="lead">How a planned economy is supposed to work, where it breaks, and what that means for one real city. Each lesson ends with something to try and a page in the game to test it on.</p>
@@ -1599,7 +1683,7 @@ function introHTML() {
   return `<div class="intro"><div class="ill" aria-hidden="true">${ILL[s.ill]}</div><div class="itx">
     <div class="steps" role="tablist" aria-label="Intro steps">${INTRO.map((x, i) => `<button role="tab" aria-selected="${i === introStep}" aria-label="Step ${i + 1}: ${esc(x.h)}" class="${i === introStep ? 'on' : ''}" data-st="${i}">${i + 1}</button>`).join('')}</div>
     <h2 id="introH" tabindex="-1">${esc(s.h)}</h2>${s.p.map(t => `<p>${t}</p>`).join('')}${s.ul ? `<ul>${s.ul.map(t => `<li>${t}</li>`).join('')}</ul>` : ''}${s.p2 ? `<p>${s.p2}</p>` : ''}
-    <div class="inav"><button class="skip" id="iSkip">${last ? '' : 'Skip the intro'}</button>${introStep ? '<button class="btn" id="iBack">Back</button>' : ''}<button class="btn go" id="iNext">${last ? (S ? 'Start planning' : 'Close') : 'Next'}</button></div></div></div>`;
+    <div class="inav"><button class="skip" id="iSkip">${last ? '' : 'Skip the intro'}</button>${introStep ? '<button class="btn" id="iBack">Back</button>' : ''}${last && S ? '<button class="btn" id="iGuide">Full guide</button>' : ''}<button class="btn go" id="iNext">${last ? (S ? 'Start planning' : 'Close') : 'Next'}</button></div></div></div>`;
 }
 function openIntro(step = 0) {
   introStep = step;
@@ -1610,6 +1694,7 @@ function openIntro(step = 0) {
     $('#iNext').onclick = () => { if (introStep === INTRO.length - 1) done(); else { introStep++; card.innerHTML = introHTML(); bind(); $('#introH').focus(); } };
     const bk = $('#iBack'); if (bk) bk.onclick = () => { introStep--; card.innerHTML = introHTML(); bind(); $('#introH').focus(); };
     $('#iSkip').onclick = done;
+    const ig = $('#iGuide'); if (ig) ig.onclick = () => { done(); tab = 'guide'; render(); window.scrollTo({ top: 0 }); };
   };
   bind(); $('#iNext').focus();
 }
@@ -2212,9 +2297,9 @@ function openTeach() {
     else note('Sending did not work. Please try again in a moment.'); };
 }
 // ---------- tabs ----------
-const TABS = [['submit', 'Submit your plan'], ['decide', 'Decisions'], ['overview', 'Control figures'], ['laws', 'Laws'], ['taxes', 'Taxes'], ['plan', 'Plan & balances'], ['economy', 'Economy'], ['map', 'Map'], ['labor', 'People'], ['services', 'Services'], ['justice', 'Safety & justice'], ['climate', 'Climate'], ['politics', 'Politics'], ['budget', 'Budget'], ['scenarios', 'Scenarios'], ['viz', 'Visualize'], ['trends', 'Trends'], ['learn', 'Learn'], ['sources', 'Sources']];
-const TAB_GROUPS = [['The plan', ['decide', 'overview', 'laws', 'taxes', 'plan', 'economy']], ['The city', ['map', 'labor', 'services', 'justice', 'climate']], ['Power and money', ['politics', 'budget']], ['Looking ahead', ['scenarios', 'viz', 'trends']], ['Reference', ['learn', 'sources']]];
-const VIEWS = { submit: submitView, decide: decideView, overview, map: mapView, laws: lawsView, taxes: taxesView, plan: planView, economy: economyView, politics: politicsView, scenarios: scenariosView, viz: vizView, labor: peopleView, services: servicesView, justice: justiceView, climate: climateView, budget: budgetView, trends: trendsView, learn: learnView, sources: sourcesView };
+const TABS = [['submit', 'Submit your plan'], ['decide', 'Decisions'], ['overview', 'Control figures'], ['laws', 'Laws'], ['taxes', 'Taxes'], ['plan', 'Plan & balances'], ['economy', 'Economy'], ['map', 'Map'], ['labor', 'People'], ['services', 'Services'], ['justice', 'Safety & justice'], ['climate', 'Climate'], ['politics', 'Politics'], ['budget', 'Budget'], ['scenarios', 'Scenarios'], ['viz', 'Visualize'], ['trends', 'Trends'], ['guide', 'Guide'], ['learn', 'Learn'], ['sources', 'Sources']];
+const TAB_GROUPS = [['The plan', ['decide', 'overview', 'laws', 'taxes', 'plan', 'economy']], ['The city', ['map', 'labor', 'services', 'justice', 'climate']], ['Power and money', ['politics', 'budget']], ['Looking ahead', ['scenarios', 'viz', 'trends']], ['Reference', ['guide', 'learn', 'sources']]];
+const VIEWS = { submit: submitView, decide: decideView, overview, map: mapView, laws: lawsView, taxes: taxesView, plan: planView, economy: economyView, politics: politicsView, scenarios: scenariosView, viz: vizView, labor: peopleView, services: servicesView, justice: justiceView, climate: climateView, budget: budgetView, trends: trendsView, learn: learnView, sources: sourcesView, guide: guideView };
 function tabs() {
   let n = 0;
   $('#tabs .wrap').innerHTML = `<button class="railsub" role="tab" aria-selected="${tab === 'submit'}" data-t="submit" type="button">Submit your plan</button>` + TAB_GROUPS.map(([gname, ids]) => `<div class="tg"><span class="tgl">${esc(gname)}</span>${ids.map(id => { n++; return `<button role="tab" aria-selected="${id === tab}" data-t="${id}"><span class="no">§${n}</span><span>${esc(TABS.find(t => t[0] === id)[1])}</span></button>`; }).join('')}</div>`).join('');
@@ -2424,6 +2509,7 @@ function render() {
     $('#v-' + tab).innerHTML = `<h1>This page could not be drawn</h1><p class="lead">Something in your saved plan does not fit this version of the game (${esc(err.message)}). Your plan is safe. Try another page, or start a new plan from the start screen.</p><p><button class="btn go" id="restartBtn">Start a new plan</button></p>`;
     const rb = $('#restartBtn'); if (rb) rb.onclick = () => { if (confirmReset()) boot(newGame({ mode })); };
   }
+  if (S) { S.gv = S.gv || {}; S.gv[tab] = Math.max(S.gv[tab] ?? -1, S.t); }
   addNum();
   if (tab === 'learn') learnBind();
   addTip(tab);

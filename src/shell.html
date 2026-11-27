@@ -499,6 +499,43 @@ body.noscroll{overflow:hidden}
 @media(max-width:820px){.prow{grid-template-columns:minmax(0,1fr)}.proi{order:-1}.proi svg{max-width:150px;margin:0}.pro{padding:64px 22px 40px}.prodots{display:none}.prostats span{font-size:13.5px}}
 /* ---- learn: course ---- */
 .course{max-width:1180px}
+.guide .gsec{border-top:8px solid var(--rule);padding:18px 0 30px}
+.guide .gsec h2{margin-top:0}
+.gloop{list-style:none;padding:0;margin:14px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;counter-reset:gl}
+.gloop li{position:relative;border:2px solid var(--rule);background:var(--panel);padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;counter-increment:gl}
+.gloop li::before{content:counter(gl);font:900 34px/1 var(--display);font-stretch:62%;color:var(--red)}
+.gloop li b{font:800 20px var(--display);font-stretch:75%}
+.gloop li span{font-size:15px;line-height:1.4;flex:1}
+.gloop li .btn{align-self:flex-start}
+.gloop li:not(:last-child)::after{content:"";position:absolute;right:-24px;top:50%;width:20px;height:3px;background:var(--ink)}
+.gloop li:not(:last-child) b::after{content:"";position:absolute;right:-27px;top:calc(50% - 6px);border:7.5px solid transparent;border-left:9px solid var(--ink)}
+.gback{margin:10px 0 0;font:800 17px var(--display);font-stretch:80%;color:var(--red);border-top:3px dashed var(--red);padding-top:6px}
+.gpages{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px 24px;margin-top:12px}
+.gpages h4{margin:0 0 6px;font:760 14px var(--display);font-stretch:80%;color:var(--ink2)}
+.gpage,.gnode{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:8px 2px;color:inherit;cursor:pointer;font:inherit}
+.gpage b{font:800 17px var(--display);font-stretch:80%}.gpage span{font-size:14px;line-height:1.35;color:var(--ink2)}
+.gpage:hover b,.gnode:hover b{color:var(--red)}
+.gflow{display:grid;grid-template-columns:minmax(0,1fr) 26px minmax(0,1fr) 26px minmax(0,1fr) 26px minmax(0,1fr) 26px minmax(0,1fr);align-items:stretch;margin-top:14px}
+.gcol{border:2px solid var(--rule);background:var(--panel);padding:10px 10px 4px;display:flex;flex-direction:column}
+.gcol h4{margin:0 0 6px;font:800 15px var(--display);font-stretch:75%}
+.gcol.gin{border-color:var(--red);box-shadow:4px 4px 0 var(--red)}.gcol.gout{background:var(--ink);color:var(--paper)}.gcol.gout .gnode span{color:color-mix(in srgb,var(--paper) 75%,transparent)}.gcol.gout .gnode{border-top-color:color-mix(in srgb,var(--paper) 30%,transparent)}
+.gnode b{font:760 15px var(--text)}.gnode span{font-size:13px;line-height:1.3;color:var(--ink2)}
+.garr{position:relative}.garr::before{content:"";position:absolute;left:4px;right:9px;top:50%;height:3px;background:var(--ink)}.garr::after{content:"";position:absolute;right:0;top:calc(50% - 6px);border:7.5px solid transparent;border-left:10px solid var(--ink);border-right:0}
+.gloopback{margin:0 calc(10% - 20px) 0 10%;height:34px;border:3px solid var(--red);border-top:0;position:relative;display:flex;align-items:flex-end;justify-content:center}
+.gloopback::before{content:"";position:absolute;left:-9px;top:-2px;border:7.5px solid transparent;border-bottom:11px solid var(--red);border-top:0}
+.gloopback span{background:var(--paper);color:var(--red);font:800 14px var(--display);font-stretch:85%;padding:0 10px;transform:translateY(55%);text-align:center}
+.lnk{background:none;border:0;padding:0;font:inherit;color:inherit;text-decoration:underline;cursor:pointer}
+.gfirst{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:10px;max-width:860px}
+.gfirst li{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:14px;align-items:center;border:2px solid var(--rule);background:var(--panel);padding:12px 14px}
+.gfirst li p{margin:2px 0 0;font-size:15px}
+.gfirst li.done{opacity:.6;border-style:dashed}
+.gchk{width:40px;height:40px;border-radius:50%;border:2.5px solid var(--ink);display:grid;place-items:center;font:900 20px var(--display)}
+.gfirst li.done .gchk{background:var(--s3);border-color:var(--s3);color:#fff}
+@media(max-width:1000px){.gloop{grid-template-columns:repeat(2,minmax(0,1fr))}.gloop li:nth-child(2)::after,.gloop li:nth-child(2) b::after{display:none}
+.gflow{grid-template-columns:minmax(0,1fr)}.garr{height:26px}.garr::before{left:50%;right:auto;top:2px;bottom:9px;width:3px;height:auto}.garr::after{left:calc(50% - 6px);right:auto;top:auto;bottom:0;border:7.5px solid transparent;border-top:10px solid var(--ink);border-bottom:0}
+.gloopback{display:block;height:auto;border:0;margin:10px 0 0}.gloopback::before{display:none}.gloopback span{display:block;transform:none;padding:8px 0;border-top:3px dashed var(--red)}}
+@media(max-width:600px){.gloop{grid-template-columns:minmax(0,1fr)}.gloop li::after,.gloop li b::after{display:none}.gfirst li{grid-template-columns:40px minmax(0,1fr)}.gfirst li .btn{grid-column:2;justify-self:start}}
+
 .chero{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:24px;align-items:end;border-top:8px solid var(--rule);padding-top:18px;margin-bottom:26px}
 .chero h1.ph{text-transform:none;font:900 clamp(44px,6.4vw,92px)/.92 var(--display);font-stretch:62%;margin:0 0 14px;letter-spacing:-.01em}
 .chero .lead{max-width:56ch}
@@ -671,6 +708,7 @@ select{max-width:100%}
     <section class="view" id="v-climate"></section>
     <section class="view" id="v-budget"></section>
     <section class="view" id="v-trends"></section>
+    <section class="view" id="v-guide"></section>
     <section class="view" id="v-learn"></section>
     <section class="view" id="v-sources"></section>
   </main>
